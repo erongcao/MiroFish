@@ -236,6 +236,54 @@ pytest game_theory_tests.py -v
 
 ---
 
+## OASIS Integration (与MiroFish集成)
+
+### 方案3：决策辅助层
+
+```python
+# 1. 启用博弈论
+from game_theory import setup_us_iran_simulation
+setup_us_iran_simulation()
+
+# 2. 在Agent决策前计算博弈论建议
+from game_theory import compute_game_theory_context
+
+gt_context = compute_game_theory_context(
+    agent_id='美国政府',
+    context={'round': 1},
+    observation={'opponents': [...]}
+)
+
+# 3. 注入到prompt
+enhanced_prompt = inject_game_theory_to_prompt(
+    original_prompt,
+    agent_id='美国政府',
+    context={'round': 1}
+)
+```
+
+### 美伊停战模拟预设
+
+```python
+from game_theory import setup_us_iran_simulation, get_gt_agent
+
+setup_us_iran_simulation()
+
+us_agent = get_gt_agent('美国政府')
+result = us_agent.decide_action({'round': 1})
+print(f"建议: {result['action']}")
+print(f"推理: {result['reasoning']}")
+```
+
+### Monkey-Patch (可选)
+
+```python
+from game_theory import _patch_oasis_agent
+_patch_oasis_agent()  # 自动劫持Agent决策，注入博弈论
+```
+
+---
+
 ## Version History
 
 See [CHANGELOG.md](../../../../CHANGELOG.md) for full version history.
