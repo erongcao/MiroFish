@@ -83,6 +83,53 @@ Click the image to watch MiroFish's deep prediction of the lost ending based on 
 
 > **Financial Prediction**, **Political News Prediction** and more examples coming soon...
 
+## 🧠 Game Theory Module
+
+MiroFish includes an advanced **Game Theory Module** (`backend/app/services/game_theory/`) that provides博弈论-enhanced decision making for agents.
+
+### Features
+
+| Feature | Description |
+|---------|-------------|
+| **Nash Equilibrium Solver** | Finds dominant strategies and best responses |
+| **Bayesian Belief Update** | True Bayes formula for opponent modeling |
+| **Repeated Game Strategies** | Tit-for-Tat, Grim Trigger, Suspicious TFT |
+| **Signaling Game Analysis** | Separating vs Pooling equilibrium detection |
+| **Time Discount Factor** | Configurable δ for long-term vs short-term focus |
+| **Entity-Specific Configs** | Different risk preferences for FundManager/Retail/Miner |
+
+### Two Versions
+
+#### Financial Version (`game_theory_agent.py`)
+- Actions: `buy`, `hold`, `sell`
+- Payoff matrix based on real price movements
+- Designed for ETH/crypto market simulations
+
+#### Generic Version (`generic_game_theory.py`)
+- Custom action spaces
+- Custom payoff functions
+- Applicable to: diplomacy, stag hunt, rock-paper-scissors, etc.
+
+### Usage Example
+
+```python
+from game_theory_agent import GameTheoreticAgent, GameTheoreticConfig
+
+config = GameTheoreticConfig(repeated_strategy='tit_for_tat', discount_factor=0.95)
+agent = GameTheoreticAgent(
+    base_config={'entity_name': 'Trader1', 'stance': 'neutral'},
+    gt_config=config
+)
+
+observation = agent.observe(opponents, recent_actions)
+result = agent.decide_action(context, observation)
+# result['action'] -> 'buy', 'hold', 'sell'
+```
+
+**Test Results**: 25 tests passing ✅
+
+See [Game Theory Module README](./backend/app/services/game_theory/README.md) for full documentation.
+
 ## 🔄 Workflow
 
 1. **Graph Building**: Seed extraction & Individual/collective memory injection & GraphRAG construction
