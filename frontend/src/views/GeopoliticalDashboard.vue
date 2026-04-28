@@ -35,10 +35,26 @@
       </div>
 
       <div class="status-card">
-        <div class="card-icon">🏛️</div>
+        <div class="card-icon">🤝</div>
         <div class="card-content">
-          <div class="card-label">UN决议</div>
-          <div class="card-value">{{ unResolutionsCount }}</div>
+          <div class="card-label">活跃同盟</div>
+          <div class="card-value">{{ activeAlliancesCount }}</div>
+        </div>
+      </div>
+
+      <div class="status-card">
+        <div class="card-icon">⚠️</div>
+        <div class="card-content">
+          <div class="card-label">制裁事件</div>
+          <div class="card-value">{{ activeSanctionsCount }}</div>
+        </div>
+      </div>
+
+      <div class="status-card">
+        <div class="card-icon">☢️</div>
+        <div class="card-content">
+          <div class="card-label">核大国</div>
+          <div class="card-value">{{ nuclearPowersCount }}</div>
         </div>
       </div>
 
@@ -51,6 +67,68 @@
       </div>
     </div>
 
+    <!-- 外交状态概览 -->
+    <div class="section" v-if="diplomacySummary">
+      <h3>🌐 外交状态概览</h3>
+      <div class="diplomacy-grid">
+        <!-- 同盟 -->
+        <div class="diplomacy-card" v-if="diplomacySummary.alliances">
+          <h4>🤝 同盟</h4>
+          <div class="diplomacy-list">
+            <div v-for="alliance in diplomacySummary.alliances.alliances" :key="alliance.alliance_id" 
+                 class="alliance-item">
+              <span class="alliance-name">{{ alliance.name }}</span>
+              <span class="alliance-type">{{ alliance.type }}</span>
+              <span class="alliance-members">{{ alliance.members.length }}国</span>
+              <div class="cohesion-bar">
+                <div class="cohesion-fill" :style="{ width: (alliance.cohesion * 100) + '%' }"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 制裁 -->
+        <div class="diplomacy-card" v-if="diplomacySummary.sanctions">
+          <h4>⚠️ 制裁</h4>
+          <div class="diplomacy-list">
+            <div v-for="sanction in activeSanctions" :key="sanction.sanction_id" 
+                 class="sanction-item">
+              <span class="sanction-target">{{ sanction.target }}</span>
+              <span class="sanction-imposers">被 {{ sanction.imposers.length }} 国制裁</span>
+              <span class="sanction-severity" :class="sanction.severity">{{ sanction.severity }}</span>
+              <span class="sanction-impact">影响: {{ (sanction.economic_impact * 100).toFixed(1) }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 调解 -->
+        <div class="diplomacy-card" v-if="diplomacySummary.mediation">
+          <h4>🕊️ 调解</h4>
+          <div class="mediation-stats">
+            <div class="stat-row">
+              <span>总尝试: {{ diplomacySummary.mediation.total_attempts }}</span>
+              <span>成功率: {{ (diplomacySummary.mediation.success_rate * 100).toFixed(0) }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 核威慑 -->
+        <div class="diplomacy-card" v-if="nuclearStandoffs.length > 0">
+          <h4>☢️ 核威慑对峙</h4>
+          <div class="nuclear-list">
+            <div v-for="(standoff, index) in nuclearStandoffs" :key="index" 
+                 class="standoff-item">
+              <span>{{ standoff.a }} ↔ {{ standoff.b }}</span>
+              <span class="mad-prob">MAD: {{ (standoff.mad_probability * 100).toFixed(0) }}%</span>
+              <span class="stability" :class="{ stable: standoff.stable }">
+                {{ standoff.stable ? '稳定' : '不稳定' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 国家状态 -->
     <div class="section">
       <h3>🌐 各国状态</h3>
@@ -58,9 +136,13 @@
         <div v-for="(country, id) in countries" :key="id" class="country-card" :class="country.war_intensity">
           <div class="country-header">
             <span class="country-name">{{ country.name }}</span>
-            <span class="war-badge" v-if="country.war_intensity !== 'none'">
-              {{ country.war_intensity }}
-            </span>
+            <div class="country-badges">
+              <span class="war-badge" v-if="country.war_intensity !== 'none'">
+                {{ country.war_intensity }}
+              </span>
+              <span class="nuclear-badge" v-if="country.nuclear">☢️</span>
+              <span class="sanction-badge" v-if="country.under_sanction">⚠️</span>
+            </div>
           </div>
           
           <div class="country-stats">
@@ -77,8 +159,28 @@
               <span class="stat-value">{{ ((country.government_stability || 0.8) * 100).toFixed(0) }}%</span>
             </div>
             <div class="stat">
-              <span class="stat-label">伤亡</span>
-              <span class="stat-value">{{ country.casualties || 0 }}</span>
+              <span class="stat-label">政治资本</span>
+              <span class="stat-value">{{ ((country.political_capital || 0.5) * 100).toFixed(0) }}%</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">资源</span>
+              <span class="stat-value">{{ (country.resources || 100).toFixed(0) }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">战争疲劳</span>
+              <span class="stat-value">{{ ((country.war_exhaustion || 0) * 100).toFixed(0) }}%</span>
+            </div>
+          </div>
+
+          <!-- 外交关系 -->
+          <div class="relations-bar" v-if="country.relations">
+            <div v-for="(rel, otherId) in country.relations" :key="otherId" class="relation-row">
+              <span class="relation-name">{{ otherId }}</span>
+              <div class="relation-track">
+                <div class="relation-fill" :class="rel.state"
+                     :style="{ width: ((rel.trust + 1) / 2 * 100) + '%' }"></div>
+              </div>
+              <span class="relation-state">{{ rel.state }}</span>
             </div>
           </div>
 
@@ -119,7 +221,11 @@
           <div class="timeline-content">
             <span class="event-icon">
               {{ event.type === 'diplomatic' ? '📊' : 
-                 event.type === 'war' ? '💥' : '🏛️' }}
+                 event.type === 'war' ? '💥' : 
+                 event.type === 'alliance' ? '🤝' :
+                 event.type === 'sanction' ? '⚠️' :
+                 event.type === 'mediation' ? '🕊️' :
+                 event.type === 'nuclear' ? '☢️' : '🏛️' }}
             </span>
             <span class="event-description">{{ event.description }}</span>
           </div>
@@ -139,10 +245,15 @@ export default {
       sessions: [],
       currentTension: 50,
       warEventsCount: 0,
-      unResolutionsCount: 0,
+      activeAlliancesCount: 0,
+      activeSanctionsCount: 0,
+      nuclearPowersCount: 0,
       socialMediaCount: 0,
       countries: {},
-      timeline: []
+      timeline: [],
+      diplomacySummary: null,
+      activeSanctions: [],
+      nuclearStandoffs: []
     }
   },
   
@@ -173,6 +284,13 @@ export default {
           this.applyGeoData(geoData)
         }
         
+        // 加载外交摘要
+        const dipRes = await fetch(`/api/diplomacy/${this.selectedSession}/summary`)
+        if (dipRes.ok) {
+          this.diplomacySummary = await dipRes.json()
+          this.processDiplomacyData()
+        }
+        
         // 加载timeline
         const timelineRes = await fetch(`/api/geopolitical/${this.selectedSession}/timeline`)
         if (timelineRes.ok) {
@@ -186,11 +304,30 @@ export default {
     applyGeoData(data) {
       this.currentTension = data.global_tension || 50
       this.warEventsCount = data.war_events_count || 0
-      this.unResolutionsCount = data.un_resolutions_count || 0
+      this.socialMediaCount = data.social_media_count || 0
       
       if (data.countries) {
         this.countries = data.countries
       }
+    },
+    
+    processDiplomacyData() {
+      if (!this.diplomacySummary) return
+      
+      // 同盟数量
+      this.activeAlliancesCount = this.diplomacySummary.alliances?.active || 0
+      
+      // 制裁数量
+      this.activeSanctionsCount = this.diplomacySummary.sanctions?.active || 0
+      
+      // 核大国数量
+      this.nuclearPowersCount = this.diplomacySummary.nuclear_powers || 0
+      
+      // 活跃制裁列表
+      this.activeSanctions = this.diplomacySummary.sanctions?.active_sanctions || []
+      
+      // 核对峙
+      this.nuclearStandoffs = this.diplomacySummary.nuclear_standoffs || []
     },
     
     async refreshData() {
@@ -257,7 +394,7 @@ export default {
 
 .status-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
   margin-bottom: 30px;
 }
@@ -319,9 +456,99 @@ export default {
   margin-bottom: 16px;
 }
 
+/* 外交状态概览 */
+.diplomacy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.diplomacy-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.diplomacy-card h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.diplomacy-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.alliance-item, .sanction-item, .standoff-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+}
+
+.alliance-name {
+  font-weight: 500;
+}
+
+.alliance-type {
+  font-size: 12px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.cohesion-bar {
+  width: 60px;
+  height: 6px;
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.cohesion-fill {
+  height: 100%;
+  background: #43a047;
+  border-radius: 3px;
+}
+
+.sanction-severity {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.sanction-severity.LIGHT { background: #fff3e0; color: #e65100; }
+.sanction-severity.MODERATE { background: #ffebee; color: #c62828; }
+.sanction-severity.SEVERE { background: #fce4ec; color: #880e4f; }
+.sanction-severity.TOTAL { background: #f3e5f5; color: #4a148c; }
+
+.mad-prob {
+  font-size: 12px;
+  color: #c62828;
+}
+
+.stability {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.stability.stable {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.stability:not(.stable) {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* 国家卡片 */
 .countries-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 16px;
 }
 
@@ -358,6 +585,11 @@ export default {
   font-size: 16px;
 }
 
+.country-badges {
+  display: flex;
+  gap: 4px;
+}
+
 .war-badge {
   background: #f44336;
   color: white;
@@ -367,9 +599,17 @@ export default {
   text-transform: uppercase;
 }
 
+.nuclear-badge {
+  font-size: 14px;
+}
+
+.sanction-badge {
+  font-size: 14px;
+}
+
 .country-stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 8px;
   margin-bottom: 12px;
 }
@@ -389,6 +629,51 @@ export default {
   font-weight: 500;
 }
 
+/* 关系条 */
+.relations-bar {
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+  margin-bottom: 12px;
+}
+
+.relation-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.relation-name {
+  width: 50px;
+  font-size: 12px;
+}
+
+.relation-track {
+  flex: 1;
+  height: 6px;
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.relation-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.relation-fill.neutral { background: #9e9e9e; }
+.relation-fill.friendly { background: #43a047; }
+.relation-fill.allied { background: #1e88e5; }
+.relation-fill.hostile { background: #fb8c00; }
+.relation-fill.at_war { background: #e53935; }
+
+.relation-state {
+  font-size: 11px;
+  color: #666;
+  width: 50px;
+}
+
+/* 派系 */
 .faction-bar {
   border-top: 1px solid #eee;
   padding-top: 12px;
@@ -432,6 +717,7 @@ export default {
   background: #1e88e5;
 }
 
+/* 时间线 */
 .timeline {
   max-height: 400px;
   overflow-y: auto;
@@ -472,5 +758,9 @@ export default {
 
 .timeline-item.diplomatic .event-icon { color: #4a90d9; }
 .timeline-item.war .event-icon { color: #f44336; }
+.timeline-item.alliance .event-icon { color: #43a047; }
+.timeline-item.sanction .event-icon { color: #fb8c00; }
+.timeline-item.mediation .event-icon { color: #8e24aa; }
+.timeline-item.nuclear .event-icon { color: #e53935; }
 .timeline-item.un .event-icon { color: #764ba2; }
 </style>

@@ -4,6 +4,7 @@ Step2: Zep实体读取与过滤、OASIS模拟准备与运行（全程自动化�
 """
 
 import os
+import json
 import traceback
 from flask import request, jsonify, send_file
 
@@ -2897,6 +2898,137 @@ def get_geopolitical_countries(simulation_id: str):
         
     except Exception as e:
         logger.error(f"获取国家状态失败: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/diplomacy/summary', methods=['GET'])
+def get_diplomacy_summary(simulation_id: str):
+    """
+    获取外交系统摘要（包含同盟、制裁、调解、核威慑、国内政治）
+    """
+    try:
+        sim_dir = os.path.join(
+            Config.UPLOAD_FOLDER, 
+            'simulations', 
+            simulation_id
+        )
+        
+        # 尝试从增强模拟获取外交数据
+        enhanced_data_file = os.path.join(sim_dir, 'diplomacy_state.json')
+        
+        if os.path.exists(enhanced_data_file):
+            with open(enhanced_data_file, 'r') as f:
+                data = json.load(f)
+            return jsonify({
+                "success": True,
+                "data": data
+            })
+        
+        # 回退：从模拟配置生成基本数据
+        config_path = os.path.join(sim_dir, 'simulation_config.json')
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            
+            # 生成基本外交摘要
+            agents = config.get('agents', [])
+            summary = {
+                "round": 0,
+                "alliances": {"total_alliances": 0, "active": 0, "alliances": []},
+                "sanctions": {"total_sanctions": 0, "active": 0, "by_type": {}, "active_sanctions": []},
+                "mediation": {"total_attempts": 0, "outcomes": {}, "success_rate": 0, "mediators": 0},
+                "nuclear_powers": sum(1 for a in agents if a.get('nuclear_warheads', 0) > 0),
+                "nuclear_standoffs": [],
+                "agent_states": {},
+            }
+            
+            return jsonify({
+                "success": True,
+                "data": summary
+            })
+        
+        return jsonify({
+            "success": False,
+            "error": "Diplomacy data not found"
+        }), 404
+        
+    except Exception as e:
+        logger.error(f"获取外交摘要失败: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/diplomacy/country/<country_id>', methods=['GET'])
+def get_country_diplomacy(simulation_id: str, country_id: str):
+    """
+    获取特定国家的外交上下文
+    
+    包含：同盟、制裁、核地位、国内政治、外交关系
+    """
+    try:
+        sim_dir = os.path.join(
+            Config.UPLOAD_FOLDER, 
+            'simulations', 
+            simulation_id
+        )
+        
+        # 尝试从增强模拟获取
+        country_file = os.path.join(sim_dir, f'diplomacy_{country_id}.json')
+        
+        if os.path.exists(country_file):
+            with open(country_file, 'r') as f:
+                data = json.load(f)
+            return jsonify({
+                "success": True,
+                "data": data
+            })
+        
+        # 回退：从模拟配置生成基本数据
+        config_path = os.path.join(sim_dir, 'simulation_config.json')
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            
+            # 找到对应 agent
+            agent = next((a for a in config.get('agents', []) if str(a.get('agent_id', '')) == country_id), None)
+            
+            if not agent:
+                return jsonify({
+                    "success": False,
+                    "error": f"Country {country_id} not found"
+                }), 404
+            
+            context = {
+                "agent_id": country_id,
+                "name": agent.get('name', country_id),
+                "nuclear": {
+                    "has_nukes": agent.get('nuclear_warheads', 0) > 0,
+                    "warheads": agent.get('nuclear_warheads', 0),
+                    "no_first_use": agent.get('no_first_use', False),
+                },
+                "political_system": agent.get('political_system', 'democracy'),
+                "alliances": {"member_of": [], "can_propose_to": [], "collective_defenders": []},
+                "sanctions": {"under_sanctions": [], "imposed_sanctions": [], "total_impact": 0},
+                "relations": {},
+            }
+            
+            return jsonify({
+                "success": True,
+                "data": context
+            })
+        
+        return jsonify({
+            "success": False,
+            "error": "Diplomacy data not found"
+        }), 404
+        
+    except Exception as e:
+        logger.error(f"获取国家外交数据失败: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e)
