@@ -5,6 +5,7 @@ Multi-Agent Political Simulation - 多智能体政治模拟
 
 import json
 import time
+import asyncio
 from typing import Dict, List, Optional, Tuple, Set
 from dataclasses import dataclass, field
 from collections import defaultdict
@@ -398,23 +399,20 @@ class MultiAgentPoliticalSimulation:
             print(f"  [{config['country'].upper()}] {agent.name}")
     
     def run_round(self, round_num: int, scenario: str, context: str) -> Dict:
-        """运行一轮模拟"""
+        """运行一轮模拟（同步包装异步方法）"""
+        return asyncio.run(self.run_round_async(round_num, scenario, context))
+    
+    async def run_round_async(self, round_num: int, scenario: str, context: str) -> Dict:
+        """异步运行一轮模拟"""
         print(f"\n{'='*60}")
         print(f"第 {round_num} 轮 - {len(self.agents)} 个智能体博弈")
         print(f"{'='*60}")
         
-        # 1. LLM决策阶段 - 每个Agent独立决策
-        print("\n[阶段1] LLM决策生成")
-        decisions = {}
-        
-        for agent_id, agent in self.agents.items():
-            if agent.resources <= 0:
-                continue  # 资源耗尽，跳过
-            
-            decision = self._generate_agent_decision(agent, scenario, context, round_num)
-            decisions[agent_id] = decision
-            
-            time.sleep(0.05)  # 避免API过载
+        # 1. LLM决策阶段 - 并行生成所有Agent决策
+        start_time = time.time()
+        decisions = await self._generate_all_decisions_async(scenario, context, round_num)
+        llm_time = time.time() - start_time
+        print(f"  LLM决策耗时: {llm_time:.1f}秒")
         
         # 2. 博弈论计算 - 所有两两博弈
         print(f"\n[阶段2] 博弈论计算 ({len(self.agents)}个Agent = {len(self.agents)*(len(self.agents)-1)//2}对)")
@@ -536,6 +534,152 @@ class MultiAgentPoliticalSimulation:
                 pass
         
         return {"action": DiplomaticAction.COOPERATE, "target": "none", "reasoning": "fallback"}
+    
+    async def _generate_agent_decision_async(self, agent: Agent, scenario: str, 
+                                              context: str, round_num: int) -> Dict:
+        """异步生成单个Agent的决策"""
+        try:
+            # 复用同步方法的prompt构建逻辑
+            related_agents = []
+            for other_id, other in self.agents.items():
+                if other_id != agent.agent_id and other.country != agent.country:
+                    stance = agent.stance.get(other.country, 0.0)
+                    related_agents.append({
+                        "name": other.name,
+                        "country": other.country,
+                        "stance": stance,
+                        "power": other.power,
+                    })
+            
+            allies = [self.agents[a].name for a in agent.allies if a in self.agents]
+            enemies = [self.agents[e].name for e in agent.enemies if e in self.agents]
+            
+            prompt = f"""你是{agent.name}（{agent.country.upper()}）。
+
+角色：{agent.government_role or agent.force_type}
+派系：{agent.faction or 'N/A'}
+影响力：{agent.power:.2f}
+当前资源：{agent.resources:.1f}
+战争疲劳：{agent.war_exhaustion:.2f}
+
+立场：
+{json.dumps(agent.stance, ensure_ascii=False, indent=2)}
+
+盟友：{', '.join(allies) if allies else '无'}
+敌对：{', '.join(enemies) if enemies else '无'}
+
+当前场景：{scenario}
+当前局势：{context}
+
+作为{agent.name}，基于你的立场和利益，选择行动：
+- cooperate: 合作
+- defect: 背叛（利用对方）
+- deter: 威慑
+- escalate: 升级冲突
+- negotiate: 谈判
+- sanction: 制裁
+- appeasse: 绥靖
+
+回复JSON：
+{{
+    "action": "行动",
+    "target": "目标国家/势力",
+    "reasoning": "决策理由（博弈论分析）",
+    "allies_involved": ["盟友列表，如果有的话"],
+    "expected_payoff": "预期收益"
+}}"""
+            
+            messages = [
+                {"role": "system", "content": "你是一个地缘政治博弈专家。"},
+                {"role": "user", "content": prompt},
+            ]
+            
+            # 在线程池中执行LLM调用（避免阻塞事件循环）
+            response = await asyncio.to_thread(
+                self.llm.chat,
+                messages,
+                temperature=0.8,
+                max_tokens=300
+            )
+            
+            if response:
+                try:
+                    content = response.content.strip()
+                    if content.startswith("```"):
+                        content = content.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+                    
+                    data = json.loads(content)
+                    action_str = data.get("action", "cooperate")
+                    
+                    action_map = {
+                        "cooperate": DiplomaticAction.COOPERATE,
+                        "defect": DiplomaticAction.DEFECT,
+                        "deter": DiplomaticAction.DETER,
+                        "escalate": DiplomaticAction.ESCALATE,
+                        "negotiate": DiplomaticAction.NEGOTIATE,
+                        "sanction": DiplomaticAction.SANCTION,
+                        "appease": DiplomaticAction.APPEASE,
+                        "ignore": DiplomaticAction.IGNORE,
+                    }
+                    
+                    return {
+                        "agent_id": agent.agent_id,
+                        "decision": {
+                            "action": action_map.get(action_str, DiplomaticAction.COOPERATE),
+                            "target": data.get("target", "none"),
+                            "reasoning": data.get("reasoning", ""),
+                            "expected_payoff": data.get("expected_payoff", ""),
+                        }
+                    }
+                except:
+                    pass
+            
+            return {
+                "agent_id": agent.agent_id,
+                "decision": {"action": DiplomaticAction.COOPERATE, "target": "none", "reasoning": "fallback"}
+            }
+        except Exception as e:
+            print(f"  [错误] {agent.name} 决策生成失败: {e}")
+            return {
+                "agent_id": agent.agent_id,
+                "decision": {"action": DiplomaticAction.COOPERATE, "target": "none", "reasoning": f"错误: {str(e)[:50]}"}
+            }
+    
+    async def _generate_all_decisions_async(self, scenario: str, context: str, 
+                                             round_num: int) -> Dict:
+        """并行生成所有Agent的决策"""
+        print(f"\n[阶段1] LLM决策生成 (并行: {len(self.agents)}个Agent, 并发限制: 10)")
+        
+        # 创建任务列表
+        tasks = []
+        for agent_id, agent in self.agents.items():
+            if agent.resources <= 0:
+                continue
+            task = self._generate_agent_decision_async(agent, scenario, context, round_num)
+            tasks.append(task)
+        
+        # 限制并发数避免过载Ollama
+        semaphore = asyncio.Semaphore(10)
+        
+        async def bounded_task(task):
+            async with semaphore:
+                return await task
+        
+        bounded_tasks = [bounded_task(t) for t in tasks]
+        results = await asyncio.gather(*bounded_tasks, return_exceptions=True)
+        
+        # 收集结果
+        decisions = {}
+        success_count = 0
+        for result in results:
+            if isinstance(result, dict) and "agent_id" in result:
+                decisions[result["agent_id"]] = result["decision"]
+                success_count += 1
+            elif isinstance(result, Exception):
+                print(f"  [错误] 任务异常: {result}")
+        
+        print(f"  完成: {success_count}/{len(tasks)} 个决策")
+        return decisions
     
     def _calculate_all_bilateral_games(self, decisions: Dict) -> Dict:
         """计算所有两两博弈"""
@@ -772,7 +916,11 @@ class MultiAgentPoliticalSimulation:
             print(f"  {i}. {agent.name}: 资源={res:.1f}, 疲劳={fatigue:.2f}")
     
     def run_full_simulation(self, scenario: str, context: str, rounds: int = 3):
-        """运行完整模拟"""
+        """运行完整模拟（同步包装）"""
+        asyncio.run(self.run_full_simulation_async(scenario, context, rounds))
+    
+    async def run_full_simulation_async(self, scenario: str, context: str, rounds: int = 3):
+        """异步运行完整模拟"""
         print(f"\n{'='*60}")
         print(f"多智能体政治模拟系统")
         print(f"{'='*60}")
@@ -780,10 +928,11 @@ class MultiAgentPoliticalSimulation:
         print(f"博弈对数: {len(self.agents)*(len(self.agents)-1)//2}")
         print(f"模拟轮数: {rounds}")
         print(f"LLM: {self.llm.provider}/{self.llm.model}")
+        print(f"并行并发: 10")
         print(f"{'='*60}")
         
         for round_num in range(1, rounds + 1):
-            self.run_round(round_num, scenario, context)
+            await self.run_round_async(round_num, scenario, context)
         
         # 最终报告
         self._print_final_report()
