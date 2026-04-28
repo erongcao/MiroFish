@@ -177,7 +177,36 @@ class MultiAgentPoliticalSimulation:
         # 5. 政府内部派系（特殊Agent）
         self._add_government_agents()
         
+        # 6. 初始化博弈论引擎
+        self._initialize_game_theory_engine()
+        
         print(f"\n[初始化完成] 共 {len(self.agents)} 个智能体")
+    
+    def _initialize_game_theory_engine(self):
+        """初始化博弈论引擎"""
+        agent_configs = []
+        for agent_id, agent in self.agents.items():
+            stance = "neutral"
+            if agent.force_type in ["military_industrial", "military", "security", "siloviki"]:
+                stance = "opposing"
+            elif agent.force_type in ["financial", "reformist", "pragmatist", "oligarchs"]:
+                stance = "supportive"
+            
+            # 计算sentiment_bias
+            sentiment = 0.0
+            if "usa" in agent.stance:
+                sentiment = agent.stance["usa"]
+            elif "china" in agent.stance:
+                sentiment = -agent.stance["china"]
+            
+            agent_configs.append({
+                "agent_id": agent_id,
+                "stance": stance,
+                "sentiment_bias": sentiment,
+            })
+        
+        self.gt_engine.initialize_agents(agent_configs)
+        print(f"  [博弈论引擎] 初始化 {len(agent_configs)} 个Agent")
     
     def _add_government_agents(self):
         """添加政府内部派系Agent"""
