@@ -248,88 +248,77 @@ class GameTheoryDiplomacy:
             "success": success,
             "payoff_a": net_payoff_a,
             "payoff_b": net_payoff_b,
+            "cost_a": cost_a,
+            "cost_b": cost_b,
             "trust_delta": trust_delta,
-            "conflict_level": self.conflict_levels[f"{min(agent_a, agent_b)}|{max(agent_a, agent_b)}"].value,
-            "betrayal_by_a": history_a.betrayal,
-            "betrayal_by_b": history_b.betrayal,
+            "conflict_level": self.conflict_levels[key].value,
+            "action_a": action_a,
+            "action_b": action_b
         }
     
-    def _determine_success(self, action_a: DiplomaticAction, action_b: DiplomaticAction,
-                          state_a: AgentDiplomaticState, 
+    def _determine_success(self, action_a: DiplomaticAction, 
+                          action_b: DiplomaticAction,
+                          state_a: AgentDiplomaticState,
                           state_b: AgentDiplomaticState) -> bool:
-        """判断外交是否成功"""
-        # 双方都合作 → 成功
+        """判断行动是否成功"""
+        # 简单的成功判断逻辑
         if action_a == DiplomaticAction.COOPERATE and action_b == DiplomaticAction.COOPERATE:
             return True
-        
-        # 一方合作一方背叛 → 背叛方"成功"，但关系恶化
-        if action_a == DiplomaticAction.COOPERATE and action_b in [DiplomaticAction.DEFECT, DiplomaticAction.ESCALATE]:
-            return False  # 合作方被利用
-        if action_b == DiplomaticAction.COOPERATE and action_a in [DiplomaticAction.DEFECT, DiplomaticAction.ESCALATE]:
+        elif action_a == DiplomaticAction.ESCALATE and state_a.resources > state_b.resources:
+            return True
+        elif action_b == DiplomaticAction.ESCALATE and state_b.resources > state_a.resources:
             return False
-        
-        # 双方都强硬 → 看实力和可信度
-        if action_a in [DiplomaticAction.DETER, DiplomaticAction.ESCALATE] and \
-           action_b in [DiplomaticAction.DETER, DiplomaticAction.ESCALATE]:
-            # 可信度 + 资源决定
-            power_a = state_a.credibility * state_a.resources
-            power_b = state_b.credibility * state_b.resources
-            # 实力相近 → 僵局/双输
-            if abs(power_a - power_b) < 20:
-                return False  # 僵局
-            else:
-                return power_a > power_b  # 强者"成功"
-        
-        # 谈判 → 需要双方都有意愿
-        if action_a == DiplomaticAction.NEGOTIATE or action_b == DiplomaticAction.NEGOTIATE:
-            willingness = (state_a.cooperation_bias + state_b.cooperation_bias) / 2
-            return random.random() < willingness
-        
-        # 绥靖 → 看对方是否接受
-        if action_a == DiplomaticAction.APPEASE:
-            return state_b.aggression < 0.7  # 对方不太激进则接受
-        if action_b == DiplomaticAction.APPEASE:
-            return state_a.aggression < 0.7
-        
-        return False
+        elif action_a == DiplomaticAction.DEFECT and action_b == DiplomaticAction.COOPERATE:
+            return True
+        elif action_b == DiplomaticAction.DEFECT and action_a == DiplomaticAction.COOPERATE:
+            return False
+        else:
+            # 随机因素
+            return random.random() > 0.5
     
     def _calculate_trust_delta(self, action_a: DiplomaticAction, 
-                              action_b: DiplomaticAction, success: bool) -> float:
+                              action_b: DiplomaticAction,
+                              success: bool) -> float:
         """计算信任度变化"""
-        delta = 0.0
-        
-        if success:
-            delta += 0.15  # 成功合作增加信任
-        else:
-            delta -= 0.1   # 失败减少信任
-        
-        # 背叛严重损害信任
-        if action_a == DiplomaticAction.DEFECT and action_b == DiplomaticAction.COOPERATE:
-            delta -= 0.3
-        if action_b == DiplomaticAction.DEFECT and action_a == DiplomaticAction.COOPERATE:
-            delta -= 0.3
-        
-        # 升级也损害信任
-        if action_a == DiplomaticAction.ESCALATE or action_b == DiplomaticAction.ESCALATE:
-            delta -= 0.2
-        
-        # 合作建立信任
         if action_a == DiplomaticAction.COOPERATE and action_b == DiplomaticAction.COOPERATE:
-            delta += 0.2
-        
-        return delta
+            return 0.2 if success else -0.1
+        elif action_a == DiplomaticAction.DEFECT or action_b == DiplomaticAction.DEFECT:
+            return -0.3
+        elif action_a == DiplomaticAction.ESCALATE or action_b == DiplomaticAction.ESCALATE:
+            return -0.4
+        else:
+            return 0.0
     
     def _update_conflict_level(self, agent_a: str, agent_b: str,
-                              action_a: DiplomaticAction, action_b: DiplomaticAction,
-                              success: bool):
-        """更新冲突级别"""
+                                action_a: DiplomaticAction, action_b: DiplomaticAction,
+                                success: bool):
+        """更新冲突级别 - 考虑美国国内政治特点"""
         key = f"{min(agent_a, agent_b)}|{max(agent_a, agent_b)}"
         current = self.conflict_levels[key]
         
         trust = (self.agents[agent_a].get_trust(agent_b) + 
                 self.agents[agent_b].get_trust(agent_a)) / 2
         
-        # 根据信任度和行动升级/降级
+        # 获取国家信息（从agent_id推断）
+        country_a = self._get_country(agent_a)
+        country_b = self._get_country(agent_b)
+        
+        # 美国国内政治特殊处理：同国Agent冲突升级更慢
+        if country_a == country_b == "usa":
+            # 美国国内有强大的制度整合力
+            # 冲突升级需要更多轮次
+            escalation_resistance = 0.6  # 60%阻力
+            
+            # 只有当双方都选择escalate时才升级
+            if not (action_a == DiplomaticAction.ESCALATE and action_b == DiplomaticAction.ESCALATE):
+                # 单方escalate不会导致升级
+                return
+            
+            # 随机决定是否升级（模拟国内政治阻力）
+            if random.random() > escalation_resistance:
+                return  # 政治阻力阻止升级
+        
+        # 标准冲突升级逻辑
         if success and action_a == DiplomaticAction.COOPERATE and action_b == DiplomaticAction.COOPERATE:
             # 成功合作 → 降级
             if current == ConflictLevel.TENSION:
@@ -355,152 +344,206 @@ class GameTheoryDiplomacy:
             elif current == ConflictLevel.LIMITED_WAR:
                 self.conflict_levels[key] = ConflictLevel.TOTAL_WAR
     
+    def _get_country(self, agent_id: str) -> str:
+        """从agent_id推断国家"""
+        if agent_id.startswith("us_") or agent_id in ["trump_president", "pompeo_state", "mnuchin_treasury", "esper_defense"]:
+            return "usa"
+        elif agent_id.startswith("cn_") or agent_id in ["xi_president", "yang_foreign", "wei_military"]:
+            return "china"
+        elif agent_id.startswith("ru_") or agent_id in ["putin_president", "shoigu_defense", "lavrov_foreign"]:
+            return "russia"
+        elif agent_id.startswith("eu_") or agent_id in ["macron_france", "merkel_germany"]:
+            return "eu"
+        elif agent_id.startswith("iran_"):
+            return "iran"
+        elif agent_id.startswith("israel_"):
+            return "israel"
+        elif agent_id.startswith("saudi_"):
+            return "saudi"
+        elif agent_id.startswith("india_"):
+            return "india"
+        elif agent_id.startswith("japan_"):
+            return "japan"
+        elif agent_id.startswith("uk_"):
+            return "uk"
+        elif agent_id.startswith("turkey_"):
+            return "turkey"
+        elif agent_id.startswith("nk_"):
+            return "north_korea"
+        elif agent_id.startswith("sk_"):
+            return "south_korea"
+        return "unknown"
+    
     def get_agent_strategy(self, agent_id: str, opponent_id: str,
                           available_actions: List[DiplomaticAction]) -> DiplomaticAction:
         """为 agent 选择最优策略 - 基于博弈论"""
         state = self.agents[agent_id]
-        opponent = self.agents[opponent_id]
+        opponent_state = self.agents[opponent_id]
         
-        # 1. 获取历史模式
-        opponent_history = [h for h in opponent.history if h.target == agent_id]
-        opponent_pattern = self._analyze_pattern(opponent_history)
+        # 计算预期收益
+        best_action = None
+        best_expected_payoff = float('-inf')
         
-        # 2. 计算期望收益
-        expected_payoffs = {}
         for action in available_actions:
-            # 预测对方行动
-            predicted_opponent_action = self._predict_opponent_action(
-                opponent, agent_id, opponent_pattern
-            )
+            expected_payoff = 0.0
             
-            # 计算期望收益
-            payoff, _ = self.payoff_matrix.get_payoff(action, predicted_opponent_action)
+            # 预测对手行动
+            opponent_action_probs = self._predict_opponent_actions(opponent_id, agent_id)
             
-            # 加入成本
-            cost = self.action_costs.get(action, 0.0)
+            for opponent_action, prob in opponent_action_probs.items():
+                payoff, _ = self.payoff_matrix.get_payoff(action, opponent_action)
+                cost = self.action_costs.get(action, 0.0)
+                expected_payoff += prob * (payoff - cost)
             
-            # 加入声誉影响
-            reputation_impact = 0.0
+            # 考虑声誉影响
             if action == DiplomaticAction.COOPERATE:
-                reputation_impact = 0.1
-            elif action == DiplomaticAction.DEFECT:
-                reputation_impact = -0.15
+                expected_payoff += state.reputation * 0.5
+            elif action == DiplomaticAction.ESCALATE:
+                expected_payoff -= state.war_exhaustion * 2.0
             
-            # 加入战争疲劳
-            exhaustion_penalty = 0.0
-            if action == DiplomaticAction.ESCALATE:
-                exhaustion_penalty = -state.war_exhaustion * 2.0
-            
-            expected_payoffs[action] = (
-                payoff - cost + reputation_impact + exhaustion_penalty
-            )
+            if expected_payoff > best_expected_payoff:
+                best_expected_payoff = expected_payoff
+                best_action = action
         
-        # 3. 选择最优策略（加入随机性避免确定性）
-        max_payoff = max(expected_payoffs.values())
-        best_actions = [a for a, p in expected_payoffs.items() if p >= max_payoff - 0.5]
-        
-        # 根据 agent 性格加入倾向
-        if state.aggression > 0.6 and DiplomaticAction.ESCALATE in best_actions:
-            return DiplomaticAction.ESCALATE
-        elif state.cooperation_bias > 0.5 and DiplomaticAction.COOPERATE in best_actions:
-            return DiplomaticAction.COOPERATE
-        
-        return random.choice(best_actions)
+        return best_action if best_action else DiplomaticAction.COOPERATE
     
-    def _analyze_pattern(self, history: List[DiplomaticHistory]) -> Dict:
-        """分析对手历史行为模式"""
-        if not history:
-            return {"cooperation_rate": 0.3, "betrayal_rate": 0.2, "escalation_rate": 0.2}
+    def _predict_opponent_actions(self, opponent_id: str, my_id: str) -> Dict[DiplomaticAction, float]:
+        """预测对手行动概率"""
+        opponent_state = self.agents[opponent_id]
         
-        total = len(history)
-        cooperate = sum(1 for h in history if h.action == DiplomaticAction.COOPERATE)
-        betray = sum(1 for h in history if h.betrayal)
-        escalate = sum(1 for h in history if h.action == DiplomaticAction.ESCALATE)
+        # 基于历史行为预测
+        if not opponent_state.history:
+            # 没有历史，均匀分布
+            return {
+                DiplomaticAction.COOPERATE: 0.3,
+                DiplomaticAction.DEFECT: 0.2,
+                DiplomaticAction.ESCALATE: 0.2,
+                DiplomaticAction.NEGOTIATE: 0.2,
+                DiplomaticAction.SANCTION: 0.1
+            }
         
-        return {
-            "cooperation_rate": cooperate / total,
-            "betrayal_rate": betray / total,
-            "escalation_rate": escalate / total,
-        }
+        # 统计历史行动频率
+        action_counts = defaultdict(int)
+        for h in opponent_state.history:
+            action_counts[h.action] += 1
+        
+        total = len(opponent_state.history)
+        probs = {}
+        for action in DiplomaticAction:
+            probs[action] = action_counts.get(action, 0) / total
+        
+        # 加入一些随机性
+        for action in probs:
+            probs[action] = 0.7 * probs[action] + 0.3 * 0.2
+        
+        return probs
     
-    def _predict_opponent_action(self, opponent: AgentDiplomaticState,
-                                my_id: str, pattern: Dict) -> DiplomaticAction:
-        """预测对手行动"""
-        # 基于历史模式预测
-        rand = random.random()
+    def get_conflict_level(self, agent_a: str, agent_b: str) -> ConflictLevel:
+        """获取两个 agent 之间的冲突级别"""
+        key = f"{min(agent_a, agent_b)}|{max(agent_a, agent_b)}"
+        return self.conflict_levels.get(key, ConflictLevel.PEACE)
+    
+    def get_alliance_value(self, agent_a: str, agent_b: str) -> float:
+        """计算联盟价值 (-1 到 1)"""
+        state_a = self.agents[agent_a]
+        state_b = self.agents[agent_b]
         
-        if rand < pattern["cooperation_rate"]:
-            return DiplomaticAction.COOPERATE
-        elif rand < pattern["cooperation_rate"] + pattern["escalation_rate"]:
-            return DiplomaticAction.ESCALATE
-        elif rand < pattern["cooperation_rate"] + pattern["escalation_rate"] + pattern["betrayal_rate"]:
-            return DiplomaticAction.DEFECT
+        # 基于信任度和历史合作
+        trust = (state_a.get_trust(agent_b) + state_b.get_trust(agent_a)) / 2
+        
+        # 合作历史
+        cooperation_count = 0
+        for h in state_a.history:
+            if h.target == agent_b and h.action == DiplomaticAction.COOPERATE:
+                cooperation_count += 1
+        
+        total_interactions = len([h for h in state_a.history if h.target == agent_b])
+        if total_interactions > 0:
+            cooperation_rate = cooperation_count / total_interactions
         else:
-            return DiplomaticAction.DETER
-    
-    def get_conflict_summary(self) -> Dict:
-        """获取冲突状态摘要"""
-        summary = {
-            "total_agents": len(self.agents),
-            "peace_count": 0,
-            "tension_count": 0,
-            "crisis_count": 0,
-            "sanctions_count": 0,
-            "proxy_war_count": 0,
-            "limited_war_count": 0,
-            "total_war_count": 0,
-            "relationships": {}
-        }
+            cooperation_rate = 0.5
         
-        for key, level in self.conflict_levels.items():
-            summary[f"{level.value}_count"] += 1
-            summary["relationships"][key] = level.value
-        
-        return summary
+        return (trust * 0.6 + cooperation_rate * 0.4)
     
-    def advance_round(self):
+    def next_round(self):
         """进入下一轮"""
         self.round += 1
         
-        # 恢复资源
+        # 战争疲劳恢复
         for agent in self.agents.values():
-            agent.resources = min(200.0, agent.resources + 5.0)
             agent.war_exhaustion = max(0.0, agent.war_exhaustion - 0.05)
-            
-            # 可信度随时间恢复
-            if agent.credibility < 1.0:
-                agent.credibility = min(1.0, agent.credibility + 0.02)
-
-# 使用示例
-if __name__ == "__main__":
-    # 创建博弈论外交系统
-    diplomacy = GameTheoryDiplomacy()
+            # 资源缓慢恢复
+            agent.resources = min(200.0, agent.resources + 2.0)
     
-    # 配置 agent
-    agent_configs = [
-        {"agent_id": "usa", "stance": "opposing", "sentiment_bias": -0.3},
-        {"agent_id": "china", "stance": "neutral", "sentiment_bias": 0.0},
-        {"agent_id": "russia", "stance": "opposing", "sentiment_bias": 0.3},
-        {"agent_id": "iran", "stance": "opposing", "sentiment_bias": -0.3},
-        {"agent_id": "eu", "stance": "neutral", "sentiment_bias": 0.0},
+    def get_agent_stats(self, agent_id: str) -> Dict:
+        """获取 agent 统计信息"""
+        state = self.agents.get(agent_id)
+        if not state:
+            return {}
+        
+        return {
+            "reputation": state.reputation,
+            "credibility": state.credibility,
+            "aggression": state.aggression,
+            "cooperation_bias": state.cooperation_bias,
+            "resources": state.resources,
+            "war_exhaustion": state.war_exhaustion,
+            "history_count": len(state.history)
+        }
+    
+    def get_global_state(self) -> Dict:
+        """获取全局状态"""
+        total_agents = len(self.agents)
+        if total_agents == 0:
+            return {}
+        
+        avg_resources = sum(a.resources for a in self.agents.values()) / total_agents
+        avg_war_exhaustion = sum(a.war_exhaustion for a in self.agents.values()) / total_agents
+        
+        conflict_counts = defaultdict(int)
+        for level in self.conflict_levels.values():
+            conflict_counts[level.value] += 1
+        
+        return {
+            "round": self.round,
+            "total_agents": total_agents,
+            "avg_resources": avg_resources,
+            "avg_war_exhaustion": avg_war_exhaustion,
+            "conflict_distribution": dict(conflict_counts),
+            "total_conflicts": len(self.conflict_levels)
+        }
+
+# 测试代码
+if __name__ == "__main__":
+    engine = GameTheoryDiplomacy()
+    
+    # 创建测试 agents
+    configs = [
+        {"agent_id": "usa_military", "stance": "opposing"},
+        {"agent_id": "usa_economic", "stance": "neutral"},
+        {"agent_id": "china_military", "stance": "opposing"},
+        {"agent_id": "china_economic", "stance": "supportive"},
     ]
     
-    diplomacy.initialize_agents(agent_configs)
+    engine.initialize_agents(configs)
     
-    # 模拟几轮外交
-    for round_num in range(10):
-        print(f"\n=== Round {round_num} ===")
+    # 模拟几轮博弈
+    for round_num in range(3):
+        print(f"\n=== Round {round_num + 1} ===")
         
         # USA vs China
-        action_usa = diplomacy.get_agent_strategy("usa", "china", 
-            [DiplomaticAction.COOPERATE, DiplomaticAction.DETER, DiplomaticAction.ESCALATE])
-        action_china = diplomacy.get_agent_strategy("china", "usa",
-            [DiplomaticAction.COOPERATE, DiplomaticAction.DETER, DiplomaticAction.NEGOTIATE])
+        action_usa = engine.get_agent_strategy("usa_military", "china_military",
+                                               [DiplomaticAction.COOPERATE, DiplomaticAction.ESCALATE])
+        action_china = engine.get_agent_strategy("china_military", "usa_military",
+                                                [DiplomaticAction.COOPERATE, DiplomaticAction.DETER])
         
-        result = diplomacy.calculate_diplomatic_outcome("usa", "china", action_usa, action_china)
-        print(f"USA({action_usa.value}) vs China({action_china.value}): {result}")
+        result = engine.calculate_diplomatic_outcome("usa_military", "china_military",
+                                                      action_usa, action_china)
         
-        diplomacy.advance_round()
+        print(f"USA: {action_usa.value}, China: {action_china.value}")
+        print(f"Result: {result}")
+        
+        engine.next_round()
     
-    print("\n=== Final Conflict Summary ===")
-    print(diplomacy.get_conflict_summary())
+    print("\nFinal State:")
+    print(engine.get_global_state())

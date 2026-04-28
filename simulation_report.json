@@ -1,0 +1,5149 @@
+{
+  "setup": {
+    "agents": 72,
+    "scenario": "2026年4月，美以伊战争持续2个月\n\n背景：\n- 伊朗GDP的65%被摧毁，通胀70%，货币贬值30倍\n- 美军13人死亡，365人受伤，花费500亿美元\n- 以色列本土受打击，2,238人受伤\n- 霍尔木兹海峡被伊朗封锁，油价100-140美元\n- 全球能源危机，欧盟/亚洲能源进口受阻\n- 伊朗持有440公斤60%浓缩铀，IAEA核查真空",
+    "initial_date": "2026年4月",
+    "war_duration": "2个月"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "elapsed_seconds": 241.49046993255615,
+      "decisions": {
+        "usa": {
+          "escalate": 12,
+          "negotiate": 6
+        },
+        "china": {
+          "cooperate": 3,
+          "deter": 2,
+          "negotiate": 8
+        },
+        "russia": {
+          "cooperate": 9,
+          "negotiate": 2,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 7,
+          "sanction": 1,
+          "cooperate": 1,
+          "deter": 1
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "deter": 1,
+          "negotiate": 2
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "negotiate": 2
+        },
+        "saudi": {
+          "negotiate": 1,
+          "cooperate": 1
+        },
+        "israel": {
+          "escalate": 2
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 2
+        },
+        "turkey": {
+          "negotiate": 1
+        },
+        "south_korea": {
+          "cooperate": 2
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 114.95509821769636,
+          "fatigue": 0.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 114.95509821769636,
+          "fatigue": 0.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 102.98820522525756,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 102.98820522525756,
+          "fatigue": 0.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 102.98820522525756,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 121.62865108800503,
+          "fatigue": 0.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 97.42777051608539,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 97.42777051608539,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 97.42777051608539,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 97.42777051608539,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 97.42777051608539,
+          "fatigue": 0.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 121.62865108800503,
+          "fatigue": 0.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 121.62865108800503,
+          "fatigue": 0.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 97.42777051608539,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 88.19202474755802,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 88.19202474755802,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 88.19202474755802,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 88.19202474755802,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 88.19202474755802,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 88.19202474755802,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 88.19202474755802,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 88.19202474755802,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 41.32199470637514,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 51.90775574925308,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.3
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 51.90775574925308,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 51.90775574925308,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 51.90775574925308,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 51.90775574925308,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 99.8076103764004,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 51.90775574925308,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 51.90775574925308,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 110.11192690476437,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 104.79653611630536,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 104.79653611630536,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 95.95064125749991,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 49.82056424553548,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 104.38694878232552,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 46.936385315585206,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 29.93924623726455,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 63.1790531918574,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 63.933524393905785,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 26.192285798402292,
+          "fatigue": 0.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 32.24732394030528,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 73.95116702338656,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 117.12500386947377,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 91.50160639817597,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 104.38694878232552,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 40.511244787232236,
+          "fatigue": 0.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 55.776916403037674,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 101.5741471950422,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    },
+    {
+      "round": 2,
+      "elapsed_seconds": 260.5519468784332,
+      "decisions": {
+        "usa": {
+          "escalate": 11,
+          "negotiate": 6,
+          "sanction": 1
+        },
+        "china": {
+          "deter": 4,
+          "negotiate": 8,
+          "cooperate": 1
+        },
+        "russia": {
+          "cooperate": 9,
+          "negotiate": 2,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 8,
+          "sanction": 1,
+          "cooperate": 1
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "deter": 1,
+          "negotiate": 2
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "negotiate": 2
+        },
+        "saudi": {
+          "negotiate": 2
+        },
+        "israel": {
+          "escalate": 2
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 2
+        },
+        "turkey": {
+          "deter": 1
+        },
+        "south_korea": {
+          "cooperate": 2
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 129.14678304895253,
+          "fatigue": 0.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 129.14678304895253,
+          "fatigue": 0.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 116.2807144880725,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 35.251350747773984,
+          "fatigue": 0.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 116.2807144880725,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 105.51311356799809,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 105.51311356799809,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 105.51311356799809,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 105.51311356799809,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 105.51311356799809,
+          "fatigue": 0.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 129.90979099639088,
+          "fatigue": 0.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 105.51311356799809,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 104.26763696744212,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 104.26763696744212,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 104.26763696744212,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 104.26763696744212,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 104.26763696744212,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 104.26763696744212,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 104.26763696744212,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 104.26763696744212,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 44.22000511009391,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.3
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 44.22000511009391,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 44.22000511009391,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 44.22000511009391,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 44.22000511009391,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 124.70965458170171,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 44.22000511009391,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 44.22000511009391,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 123.78100099231449,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 112.60758433089822,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 112.60758433089822,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 112.21257480999816,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 105.88709962183893,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 56.03713131658571,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 57.106562719171215,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 17.396928183795303,
+          "fatigue": 0.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 31.61782602157655,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 67.13170204912694,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 112.43644981208588,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 79.39207810577577,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 105.88709962183893,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 39.440707389233516,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 119.41855326842894,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    },
+    {
+      "round": 3,
+      "elapsed_seconds": 261.498642206192,
+      "decisions": {
+        "usa": {
+          "escalate": 12,
+          "negotiate": 5,
+          "cooperate": 1
+        },
+        "china": {
+          "deter": 4,
+          "cooperate": 2,
+          "negotiate": 7
+        },
+        "russia": {
+          "cooperate": 9,
+          "negotiate": 2,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 7,
+          "sanction": 2,
+          "cooperate": 1
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "deter": 1,
+          "negotiate": 2
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "negotiate": 2
+        },
+        "saudi": {
+          "negotiate": 2
+        },
+        "israel": {
+          "escalate": 2
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 2
+        },
+        "turkey": {
+          "deter": 1
+        },
+        "south_korea": {
+          "cooperate": 1,
+          "negotiate": 1
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 133.9997387067645,
+          "fatigue": 0.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 133.9997387067645,
+          "fatigue": 0.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 120.82619015220398,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 120.82619015220398,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 108.46567471339364,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 108.46567471339364,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 108.46567471339364,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 108.46567471339364,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 131.88285646641563,
+          "fatigue": 0.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 108.46567471339364,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 110.53855611474465,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 110.53855611474465,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 110.53855611474465,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 110.53855611474465,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 110.53855611474465,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 110.53855611474465,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 110.53855611474465,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 110.53855611474465,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 33.265577928722294,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 33.265577928722294,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 33.265577928722294,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 33.265577928722294,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 130.6438712889219,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 33.265577928722294,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 33.265577928722294,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 128.4552458912803,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 115.27863227743697,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 115.27863227743697,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 116.24021738756439,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 106.40008772654616,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 47.50993685888266,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 47.378690673613534,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 30.917642305578397,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 57.41451219961175,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 110.83316273163676,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 62.13697292531367,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 106.40008772654616,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 16.398017217636408,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 106.64032347611035,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    },
+    {
+      "round": 4,
+      "elapsed_seconds": 258.40926218032837,
+      "decisions": {
+        "usa": {
+          "escalate": 11,
+          "negotiate": 6,
+          "cooperate": 1
+        },
+        "china": {
+          "deter": 3,
+          "negotiate": 9,
+          "cooperate": 1
+        },
+        "russia": {
+          "cooperate": 8,
+          "negotiate": 3,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 8,
+          "cooperate": 2
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "deter": 1,
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "negotiate": 2
+        },
+        "saudi": {
+          "negotiate": 2
+        },
+        "israel": {
+          "cooperate": 1,
+          "escalate": 1
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 2
+        },
+        "turkey": {
+          "deter": 1
+        },
+        "south_korea": {
+          "cooperate": 2
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 135.65924417751881,
+          "fatigue": 0.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 135.65924417751881,
+          "fatigue": 0.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 122.38055047685769,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 122.38055047685769,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 109.47532568055902,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 109.47532568055902,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 109.47532568055902,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 109.47532568055902,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 132.3529593015412,
+          "fatigue": 0.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 109.47532568055902,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 112.03266612517086,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 112.03266612517086,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 112.03266612517086,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 112.03266612517086,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 112.03266612517086,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 112.03266612517086,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 112.03266612517086,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 112.03266612517086,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 132.0577585322474,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 130.0536398450748,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 116.19201764348551,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 116.19201764348551,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 98.90759426685676,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 106.57550795005945,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 37.328777418978305,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 33.51725435048935,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 30.1388355429777,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 43.56829714785512,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 110.28490639698182,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 37.54983397162957,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 106.57550795005945,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 120.6256210870889,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    },
+    {
+      "round": 5,
+      "elapsed_seconds": 255.1631247997284,
+      "decisions": {
+        "usa": {
+          "escalate": 10,
+          "negotiate": 6,
+          "cooperate": 1,
+          "deter": 1
+        },
+        "china": {
+          "deter": 2,
+          "negotiate": 9,
+          "cooperate": 2
+        },
+        "russia": {
+          "cooperate": 8,
+          "negotiate": 3,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 9,
+          "cooperate": 1
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "deter": 1,
+          "negotiate": 2
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "negotiate": 2
+        },
+        "saudi": {
+          "negotiate": 2
+        },
+        "israel": {
+          "escalate": 2
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 1,
+          "cooperate": 1
+        },
+        "turkey": {
+          "negotiate": 1
+        },
+        "south_korea": {
+          "cooperate": 2
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 136.22672482264485,
+          "fatigue": 0.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 136.22672482264485,
+          "fatigue": 0.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 122.91207593148123,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 122.91207593148123,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 109.82058358557738,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 109.82058358557738,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 109.82058358557738,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 109.82058358557738,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 132.46496606408937,
+          "fatigue": 0.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 109.82058358557738,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 112.38865297029162,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 112.38865297029162,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 112.38865297029162,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 112.38865297029162,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 90.45120035767766,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 112.38865297029162,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 112.38865297029162,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 112.38865297029162,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 132.39463149046037,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 130.60022293747798,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 116.50435678662699,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 116.50435678662699,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 113.05749581064299,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 106.6354942431822,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 20.102730609919384,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 25.80657307963438,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 11.146005696424591,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 110.09742593128438,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 124.41887748209605,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 123.95775991211926,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    },
+    {
+      "round": 6,
+      "elapsed_seconds": 262.5790009498596,
+      "decisions": {
+        "usa": {
+          "escalate": 11,
+          "negotiate": 6,
+          "cooperate": 1
+        },
+        "china": {
+          "deter": 4,
+          "negotiate": 8,
+          "cooperate": 1
+        },
+        "russia": {
+          "cooperate": 9,
+          "negotiate": 2,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 9,
+          "cooperate": 1
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "deter": 1,
+          "negotiate": 2
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "negotiate": 2
+        },
+        "saudi": {
+          "negotiate": 2
+        },
+        "israel": {
+          "escalate": 2
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 2
+        },
+        "turkey": {
+          "deter": 1
+        },
+        "south_korea": {
+          "cooperate": 2
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 136.42077918900165,
+          "fatigue": 0.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 136.42077918900165,
+          "fatigue": 0.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 123.09383514421437,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 123.09383514421437,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 109.93864717869448,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 109.93864717869448,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 109.93864717869448,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 109.93864717869448,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 132.49165280988015,
+          "fatigue": 0.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 109.93864717869448,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 112.4734704422413,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 112.4734704422413,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 112.4734704422413,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 112.4734704422413,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 105.79132897261331,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 112.4734704422413,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 112.4734704422413,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 112.4734704422413,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 132.47489488523314,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 130.7871312251324,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 116.6111635562169,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 116.6111635562169,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 116.44152837490593,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 106.65600701696926,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 16.967904104922937,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 110.03331554569213,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 112.73717153904599,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 124.75167574130822,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    },
+    {
+      "round": 7,
+      "elapsed_seconds": 260.4633038043976,
+      "decisions": {
+        "usa": {
+          "escalate": 11,
+          "negotiate": 5,
+          "cooperate": 1,
+          "deter": 1
+        },
+        "china": {
+          "deter": 5,
+          "cooperate": 2,
+          "negotiate": 6
+        },
+        "russia": {
+          "cooperate": 9,
+          "negotiate": 2,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 7,
+          "sanction": 2,
+          "cooperate": 1
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "deter": 1,
+          "negotiate": 2
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "deter": 1,
+          "negotiate": 1
+        },
+        "saudi": {
+          "negotiate": 1,
+          "cooperate": 1
+        },
+        "israel": {
+          "escalate": 2
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 1,
+          "cooperate": 1
+        },
+        "turkey": {
+          "deter": 1
+        },
+        "south_korea": {
+          "cooperate": 2
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 136.48713757042935,
+          "fatigue": 0.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 123.15598910340108,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 123.15598910340108,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 109.97901993140223,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 109.97901993140223,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 109.97901993140223,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 109.97901993140223,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 109.97901993140223,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 112.49367906412307,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 112.49367906412307,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 112.49367906412307,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 112.49367906412307,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 110.90159116977509,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 112.49367906412307,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 112.49367906412307,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 112.49367906412307,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 132.4940184520953,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 130.85104595004708,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 132.52302311611894,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 116.64768695163733,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 117.24780841314382,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 106.66302151755825,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 127.14708484421978,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 125.88695624900912,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 124.9408342298748,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    },
+    {
+      "round": 8,
+      "elapsed_seconds": 251.3928577899933,
+      "decisions": {
+        "usa": {
+          "escalate": 11,
+          "deter": 1,
+          "negotiate": 6
+        },
+        "china": {
+          "deter": 3,
+          "negotiate": 9,
+          "cooperate": 1
+        },
+        "russia": {
+          "cooperate": 9,
+          "negotiate": 2,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 7,
+          "sanction": 2,
+          "cooperate": 1
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "deter": 1,
+          "negotiate": 2
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "deter": 1,
+          "negotiate": 1
+        },
+        "saudi": {
+          "negotiate": 1,
+          "cooperate": 1
+        },
+        "israel": {
+          "escalate": 2
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 2
+        },
+        "turkey": {
+          "deter": 1
+        },
+        "south_korea": {
+          "cooperate": 2
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 123.17724312725215,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 123.17724312725215,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 109.99282570436044,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 109.99282570436044,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 109.99282570436044,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 109.99282570436044,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 109.99282570436044,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 112.49849397299708,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 112.49849397299708,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 112.49849397299708,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 112.49849397299708,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 112.1191629045289,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 112.49849397299708,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 112.49849397299708,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 112.49849397299708,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 132.4985748356194,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 130.8729020812661,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 122.08886957341238,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 116.6601764072979,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 117.4399127997641,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 106.66542017992464,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 131.224613739813,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 113.23919235212894,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 124.98590315592625,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    },
+    {
+      "round": 9,
+      "elapsed_seconds": 251.09796786308289,
+      "decisions": {
+        "usa": {
+          "escalate": 10,
+          "negotiate": 7,
+          "deter": 1
+        },
+        "china": {
+          "deter": 5,
+          "negotiate": 8
+        },
+        "russia": {
+          "cooperate": 9,
+          "negotiate": 2,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 7,
+          "sanction": 2,
+          "cooperate": 1
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "deter": 1,
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "negotiate": 2
+        },
+        "saudi": {
+          "negotiate": 1,
+          "cooperate": 1
+        },
+        "israel": {
+          "escalate": 2
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 2
+        },
+        "turkey": {
+          "negotiate": 1
+        },
+        "south_korea": {
+          "cooperate": 2
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 123.18451110399526,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 123.18451110399526,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 109.99754669448846,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 109.99754669448846,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 109.99754669448846,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 109.99754669448846,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 109.99754669448846,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 112.49964117381069,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 112.49964117381069,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 112.49964117381069,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 112.49964117381069,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 112.40926170417461,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 112.49964117381069,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 112.49964117381069,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 112.49964117381069,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 132.49966044014963,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 130.88037595324948,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 118.5208306075219,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 116.66444727261313,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 117.48568361586842,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 106.66624042094891,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 132.19612630401636,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 108.91419231923268,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 124.99664128410025,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    },
+    {
+      "round": 10,
+      "elapsed_seconds": 252.36231088638306,
+      "decisions": {
+        "usa": {
+          "escalate": 11,
+          "negotiate": 7
+        },
+        "china": {
+          "deter": 3,
+          "negotiate": 8,
+          "cooperate": 2
+        },
+        "russia": {
+          "cooperate": 9,
+          "negotiate": 2,
+          "deter": 1
+        },
+        "eu": {
+          "negotiate": 7,
+          "sanction": 2,
+          "cooperate": 1
+        },
+        "france": {
+          "negotiate": 1
+        },
+        "germany": {
+          "negotiate": 1
+        },
+        "india": {
+          "negotiate": 3
+        },
+        "japan": {
+          "cooperate": 1,
+          "negotiate": 1
+        },
+        "iran": {
+          "negotiate": 2
+        },
+        "saudi": {
+          "negotiate": 1,
+          "cooperate": 1
+        },
+        "israel": {
+          "escalate": 2
+        },
+        "north_korea": {
+          "deter": 1
+        },
+        "uk": {
+          "negotiate": 2
+        },
+        "turkey": {
+          "negotiate": 1
+        },
+        "south_korea": {
+          "cooperate": 2
+        }
+      },
+      "resources": {
+        "us_military_industrial": {
+          "name": "美国军工复合体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_wall_street": {
+          "name": "美国华尔街/金融资本",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_tech_giants": {
+          "name": "美国科技巨头/硅谷",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_pro_israel_lobby": {
+          "name": "美国亲以色列游说团体",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_energy_oil": {
+          "name": "美国能源/石油集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_labor_unions": {
+          "name": "美国工会/劳工组织",
+          "country": "usa",
+          "resources": 123.18699644447997,
+          "fatigue": 0.0
+        },
+        "us_think_tanks": {
+          "name": "美国智库/思想库",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_media_conglomerates": {
+          "name": "美国媒体集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_religious_right": {
+          "name": "美国宗教保守派/福音派",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_gun_lobby": {
+          "name": "美国枪支游说 (NRA)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "us_environmental": {
+          "name": "美国环保运动",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_latino_immigrant": {
+          "name": "美国拉丁裔/移民权利",
+          "country": "usa",
+          "resources": 123.18699644447997,
+          "fatigue": 0.0
+        },
+        "us_pharma_healthcare": {
+          "name": "美国医药/医保集团",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "us_intelligence_law_enforcement": {
+          "name": "美国情报/执法机构",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_military_red": {
+          "name": "中国军方/红二代",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_security": {
+          "name": "中国安全部门",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_reformists": {
+          "name": "中国改革派/市场派",
+          "country": "china",
+          "resources": 109.99916107333246,
+          "fatigue": 0.0
+        },
+        "cn_soe_elites": {
+          "name": "中国国企/央企派",
+          "country": "china",
+          "resources": 109.99916107333246,
+          "fatigue": 0.0
+        },
+        "cn_private_capital": {
+          "name": "中国民企/科技资本",
+          "country": "china",
+          "resources": 109.99916107333246,
+          "fatigue": 0.0
+        },
+        "cn_diplomats": {
+          "name": "中国外交系统",
+          "country": "china",
+          "resources": 109.99916107333246,
+          "fatigue": 0.0
+        },
+        "cn_propaganda": {
+          "name": "中国文宣系统",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_princelings": {
+          "name": "中国太子党/权贵家族",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "cn_nationalist_wolf warriors": {
+          "name": "中国民族主义/战狼派",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "cn_local_officials": {
+          "name": "中国地方官员/诸侯",
+          "country": "china",
+          "resources": 109.99916107333246,
+          "fatigue": 0.0
+        },
+        "ru_siloviki": {
+          "name": "俄罗斯强力部门/西罗维基",
+          "country": "russia",
+          "resources": 112.49991450602553,
+          "fatigue": 0.0
+        },
+        "ru_oligarchs": {
+          "name": "俄罗斯寡头/商业精英",
+          "country": "russia",
+          "resources": 112.49991450602553,
+          "fatigue": 0.0
+        },
+        "ru_military_industrial": {
+          "name": "俄罗斯军工复合体",
+          "country": "russia",
+          "resources": 112.49991450602553,
+          "fatigue": 0.0
+        },
+        "ru_energy_sector": {
+          "name": "俄罗斯能源集团 (俄气/俄油)",
+          "country": "russia",
+          "resources": 112.49991450602553,
+          "fatigue": 0.0
+        },
+        "ru_orthodox_church": {
+          "name": "俄罗斯俄罗斯东正教会",
+          "country": "russia",
+          "resources": 112.4783806818527,
+          "fatigue": 0.0
+        },
+        "ru_nationalists": {
+          "name": "俄罗斯民族主义者/皇俄派",
+          "country": "russia",
+          "resources": 112.49991450602553,
+          "fatigue": 0.0
+        },
+        "ru_tech_elite": {
+          "name": "俄罗斯科技/IT精英",
+          "country": "russia",
+          "resources": 112.49991450602553,
+          "fatigue": 0.0
+        },
+        "ru_regional_elites": {
+          "name": "俄罗斯地方精英",
+          "country": "russia",
+          "resources": 112.49991450602553,
+          "fatigue": 0.0
+        },
+        "ru_liberal_opposition": {
+          "name": "俄罗斯自由派/反对派",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_france_germany_axis": {
+          "name": "欧盟法德轴心",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_military_industrial": {
+          "name": "欧盟欧洲军工复合体",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_financial_capital": {
+          "name": "欧盟欧洲金融资本",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_green_climate": {
+          "name": "欧盟绿党/气候派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_nationalists_eurosceptics": {
+          "name": "欧盟民族主义者/疑欧派",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_tech_giants": {
+          "name": "欧盟欧洲科技巨头",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_atlanticists": {
+          "name": "欧盟大西洋主义者/亲美派",
+          "country": "eu",
+          "resources": 132.49991909642597,
+          "fatigue": 0.0
+        },
+        "eu_eu_labor": {
+          "name": "欧盟欧洲工会/劳工",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_eu_agriculture": {
+          "name": "欧盟欧洲农业利益",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "eu_sovereignists": {
+          "name": "欧盟主权主义者",
+          "country": "eu",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "trump_president": {
+          "name": "特朗普(总统)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        " Pompeo_state": {
+          "name": "蓬佩奥(国务卿)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "Mnuchin_treasury": {
+          "name": "姆努钦(财长)",
+          "country": "usa",
+          "resources": 130.88293170119334,
+          "fatigue": 0.0
+        },
+        "Esper_defense": {
+          "name": "埃斯珀(防长)",
+          "country": "usa",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "xi_president": {
+          "name": "习近平(国家主席)",
+          "country": "china",
+          "resources": 117.30071227113692,
+          "fatigue": 0.0
+        },
+        "yang_foreign": {
+          "name": "杨洁篪(外事委主任)",
+          "country": "china",
+          "resources": 132.53571850130734,
+          "fatigue": 0.0
+        },
+        "wei_military": {
+          "name": "魏凤和(防长)",
+          "country": "china",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "putin_president": {
+          "name": "普京(总统)",
+          "country": "russia",
+          "resources": 117.4965889764576,
+          "fatigue": 0.0
+        },
+        "shoigu_defense": {
+          "name": "绍伊古(防长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "lavrov_foreign": {
+          "name": "拉夫罗夫(外长)",
+          "country": "russia",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "macron_france": {
+          "name": "马克龙(法国总统)",
+          "country": "france",
+          "resources": 100.0,
+          "fatigue": 0.0
+        },
+        "merkel_germany": {
+          "name": "默克尔(德国总理)",
+          "country": "germany",
+          "resources": 106.66652090866877,
+          "fatigue": 0.0
+        },
+        "india_military": {
+          "name": "印度军方",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_business": {
+          "name": "印度商业集团",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "india_government": {
+          "name": "印度政府",
+          "country": "india",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_military": {
+          "name": "日本自卫队",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "japan_business": {
+          "name": "日本财阀",
+          "country": "japan",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_guard": {
+          "name": "伊朗革命卫队",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "iran_government": {
+          "name": "伊朗政府",
+          "country": "iran",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "saudi_royal": {
+          "name": "沙特王室",
+          "country": "saudi",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "saudi_oil": {
+          "name": "沙特阿美石油",
+          "country": "saudi",
+          "resources": 132.42759901373157,
+          "fatigue": 0.0
+        },
+        "israel_military": {
+          "name": "以色列军方",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "israel_intel": {
+          "name": "以色列摩萨德",
+          "country": "israel",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "nk_military": {
+          "name": "朝鲜军方",
+          "country": "north_korea",
+          "resources": 10.0,
+          "fatigue": 1.0
+        },
+        "uk_government": {
+          "name": "英国政府",
+          "country": "uk",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "uk_financial": {
+          "name": "伦敦金融城",
+          "country": "uk",
+          "resources": 107.43522533051721,
+          "fatigue": 0.0
+        },
+        "turkey_military": {
+          "name": "土耳其军方",
+          "country": "turkey",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_military": {
+          "name": "韩国军方",
+          "country": "south_korea",
+          "resources": 10.0,
+          "fatigue": 0.0
+        },
+        "sk_business": {
+          "name": "韩国财阀",
+          "country": "south_korea",
+          "resources": 124.99919975191354,
+          "fatigue": 0.0
+        }
+      },
+      "fatigue": {},
+      "power": {
+        "usa": 10.41,
+        "china": 7.530000000000001,
+        "russia": 6.5,
+        "eu": 3.42,
+        "france": 0.8,
+        "germany": 0.85,
+        "india": 1.8,
+        "japan": 1.25,
+        "iran": 1.2999999999999998,
+        "saudi": 1.7000000000000002,
+        "israel": 1.45,
+        "north_korea": 0.5,
+        "uk": 1.2999999999999998,
+        "turkey": 0.6,
+        "south_korea": 1.25
+      }
+    }
+  ]
+}
