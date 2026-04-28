@@ -142,10 +142,15 @@ class PoliticalDiplomaticIntegration:
         # 基于意识形态判断
         ideology = party.ideology
         
-        if ideology in ["communist", "socialist"]:
-            return "one_party"
-        elif ideology in ["far_right", "nationalist"] and country_id in ["russia"]:
+        # 威权/非民主政权
+        if ideology in ["communist", "socialist", "nationalist_conservative", "authoritarian_nationalist"]:
+            return "authoritarian_nationalist"
+        elif country_id in ["russia"]:
+            return "competitive_authoritarian"  # 俄罗斯特殊处理
+        elif ideology in ["far_right", "nationalist"] and country_id in ["turkey"]:
             return "competitive_authoritarian"
+        elif country_id in ["iran", "saudi_arabia", "north_korea"]:
+            return "authoritarian_nationalist"  # 神权/君主/极权
         elif ideology in ["far_right", "conservative"] and party.is_ruling:
             return "democratic"
         else:
@@ -164,6 +169,12 @@ class PoliticalDiplomaticIntegration:
             ("democratic", "competitive_authoritarian"): (0.4, "民主-威权竞争"),
             ("one_party", "competitive_authoritarian"): (0.5, "非民主协调"),
             ("competitive_authoritarian", "competitive_authoritarian"): (0.5, "威权伙伴"),
+            ("democratic", "authoritarian_nationalist"): (0.2, "民主-威权对立"),
+            ("authoritarian_nationalist", "authoritarian_nationalist"): (0.6, "威权伙伴"),
+            ("authoritarian_nationalist", "competitive_authoritarian"): (0.5, "非民主协调"),
+            ("authoritarian_nationalist", "one_party"): (0.6, "威权伙伴"),
+            ("competitive_authoritarian", "authoritarian_nationalist"): (0.5, "非民主协调"),
+            ("one_party", "authoritarian_nationalist"): (0.6, "威权伙伴"),
         }
         
         key = (regime_a, regime_b)

@@ -24,6 +24,9 @@ class Ideology(Enum):
     COMMUNIST = "communist"
     FASCIST = "fascist"
     GREEN = "green"
+    NATIONALIST_CONSERVATIVE = "nationalist_conservative"  # 民族主义+保守主义
+    AUTHORITARIAN_NATIONALIST = "authoritarian_nationalist"  # 威权民族主义
+    STATE_CAPITALISM = "state_capitalism"  # 国家资本主义
 
 class Stance(Enum):
     """对华/对美立场"""
@@ -104,13 +107,13 @@ PARTY_DATABASE: Dict[str, List[PoliticalParty]] = {
             name="Communist Party of China",
             name_cn="中国共产党",
             country_id="china",
-            ideology="communist",
+            ideology="nationalist_conservative",  # 民族主义+保守主义
             is_ruling=True,
             stance_china=1.0,
             stance_usa=-0.4,  # 竞争关系
             stance_russia=0.6,  # 战略合作
-            domestic_policy="state_led",
-            economic_policy="state_led",
+            domestic_policy="authoritarian_nationalist",  # 威权民族主义
+            economic_policy="state_capitalism",  # 国家资本主义
             foreign_policy="multialignment",
         ),
     ],
@@ -600,7 +603,7 @@ CROSS_BORDER_PARTY_RELATIONS = {
     "uk_labour": ["usa_democrat", "germany_spd", "sk_dpp"],
     
     # 共产党/左翼
-    "china_cpc": ["russia_kprf", "france_lfi", "brazil_pt"],
+    "china_cpc": ["russia_kprf", "france_lfi", "brazil_pt"],  # 表面左翼联系
     "russia_kprf": ["china_cpc", "france_lfi"],
     
     # 民族主义者
