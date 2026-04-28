@@ -177,7 +177,10 @@ class MultiAgentPoliticalSimulation:
         # 5. 政府内部派系（特殊Agent）
         self._add_government_agents()
         
-        # 6. 初始化博弈论引擎
+        # 6. 其他国家势力
+        self._add_other_country_agents()
+        
+        # 7. 初始化博弈论引擎
         self._initialize_game_theory_engine()
         
         print(f"\n[初始化完成] 共 {len(self.agents)} 个智能体")
@@ -332,6 +335,67 @@ class MultiAgentPoliticalSimulation:
             
             self.agents[agent_id] = agent
             print(f"  [政府] {agent.name} ({agent.faction})")
+    
+    def _add_other_country_agents(self):
+        """添加其他重要国家势力Agent"""
+        other_agents = {
+            # 印度
+            "india_military": {"name": "印度军方", "country": "india", "force_type": "military", "power": 0.6,
+             "stances": {"china": -0.7, "usa": 0.3, "russia": 0.5}},
+            "india_business": {"name": "印度商业集团", "country": "india", "force_type": "financial", "power": 0.5,
+             "stances": {"china": -0.3, "usa": 0.4}},
+            "india_government": {"name": "印度政府", "country": "india", "force_type": "government", "power": 0.7,
+             "stances": {"china": -0.6, "usa": 0.5}},
+            # 日本
+            "japan_military": {"name": "日本自卫队", "country": "japan", "force_type": "military", "power": 0.55,
+             "stances": {"china": -0.8, "usa": 0.9}},
+            "japan_business": {"name": "日本财阀", "country": "japan", "force_type": "financial", "power": 0.7,
+             "stances": {"china": -0.2, "usa": 0.6}},
+            # 伊朗
+            "iran_guard": {"name": "伊朗革命卫队", "country": "iran", "force_type": "military", "power": 0.7,
+             "stances": {"usa": -0.9, "israel": -0.95}},
+            "iran_government": {"name": "伊朗政府", "country": "iran", "force_type": "government", "power": 0.6,
+             "stances": {"usa": -0.8, "china": 0.4}},
+            # 沙特
+            "saudi_royal": {"name": "沙特王室", "country": "saudi", "force_type": "government", "power": 0.8,
+             "stances": {"iran": -0.9, "usa": 0.7}},
+            "saudi_oil": {"name": "沙特阿美石油", "country": "saudi", "force_type": "energy", "power": 0.9,
+             "stances": {"china": 0.5, "usa": 0.4}},
+            # 以色列
+            "israel_military": {"name": "以色列军方", "country": "israel", "force_type": "military", "power": 0.75,
+             "stances": {"iran": -0.95, "usa": 0.9}},
+            "israel_intel": {"name": "以色列摩萨德", "country": "israel", "force_type": "intelligence", "power": 0.7,
+             "stances": {"iran": -0.95, "usa": 0.8}},
+            # 朝鲜
+            "nk_military": {"name": "朝鲜军方", "country": "north_korea", "force_type": "military", "power": 0.5,
+             "stances": {"usa": -0.95, "china": 0.7}},
+            # 英国
+            "uk_government": {"name": "英国政府", "country": "uk", "force_type": "government", "power": 0.6,
+             "stances": {"usa": 0.9, "china": -0.4}},
+            "uk_financial": {"name": "伦敦金融城", "country": "uk", "force_type": "financial", "power": 0.7,
+             "stances": {"usa": 0.6, "china": 0.2}},
+            # 土耳其
+            "turkey_military": {"name": "土耳其军方", "country": "turkey", "force_type": "military", "power": 0.6,
+             "stances": {"usa": 0.3, "russia": -0.4}},
+            # 韩国
+            "sk_military": {"name": "韩国军方", "country": "south_korea", "force_type": "military", "power": 0.55,
+             "stances": {"north_korea": -0.9, "usa": 0.9}},
+            "sk_business": {"name": "韩国财阀", "country": "south_korea", "force_type": "financial", "power": 0.7,
+             "stances": {"usa": 0.6, "china": 0.2}},
+        }
+        
+        for agent_id, config in other_agents.items():
+            agent = Agent(
+                agent_id=agent_id,
+                name=config["name"],
+                country=config["country"],
+                force_type=config["force_type"],
+                power=config["power"],
+                resources=100.0,
+                stance=config["stances"],
+            )
+            self.agents[agent_id] = agent
+            print(f"  [{config['country'].upper()}] {agent.name}")
     
     def run_round(self, round_num: int, scenario: str, context: str) -> Dict:
         """运行一轮模拟"""
