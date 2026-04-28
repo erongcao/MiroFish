@@ -532,18 +532,63 @@ class MultiAgentPoliticalSimulation:
         }
     
     def _update_agent_states(self, payoff_results: Dict):
-        """更新Agent状态"""
+        """更新Agent状态 - 修复资源消耗"""
         for key, result in payoff_results.items():
             agent_a_id, agent_b_id = key.split("|")
+            agent_a = self.agents[agent_a_id]
+            agent_b = self.agents[agent_b_id]
             
-            # 更新资源
-            self.agents[agent_a_id].resources -= abs(result["payoff_a"]) * 0.5
-            self.agents[agent_b_id].resources -= abs(result["payoff_b"]) * 0.5
+            # 获取行动
+            action_a = result.get("action_a", DiplomaticAction.COOPERATE)
+            action_b = result.get("action_b", DiplomaticAction.COOPERATE)
             
-            # 更新战争疲劳
-            if result.get("conflict_level") in ["limited_war", "total_war"]:
-                self.agents[agent_a_id].war_exhaustion += 0.1
-                self.agents[agent_b_id].war_exhaustion += 0.1
+            # 资源消耗（根据行动类型，有下限保护）
+            cost_a = self._calculate_resource_cost(action_a, agent_a)
+            cost_b = self._calculate_resource_cost(action_b, agent_b)
+            
+            # 应用消耗，但不低于10（防止破产）
+            agent_a.resources = max(10.0, agent_a.resources - cost_a)
+            agent_b.resources = max(10.0, agent_b.resources - cost_b)
+            
+            # 资源恢复（如果采取合作/谈判，小幅恢复）
+            if action_a in [DiplomaticAction.COOPERATE, DiplomaticAction.NEGOTIATE]:
+                agent_a.resources = min(100.0, agent_a.resources + 2.0)
+            if action_b in [DiplomaticAction.COOPERATE, DiplomaticAction.NEGOTIATE]:
+                agent_b.resources = min(100.0, agent_b.resources + 2.0)
+            
+            # 战争疲劳（只在升级/冲突时增加）
+            if action_a in [DiplomaticAction.ESCALATE, DiplomaticAction.DETER]:
+                agent_a.war_exhaustion = min(1.0, agent_a.war_exhaustion + 0.15)
+            elif action_a in [DiplomaticAction.COOPERATE, DiplomaticAction.NEGOTIATE]:
+                agent_a.war_exhaustion = max(0.0, agent_a.war_exhaustion - 0.05)
+            
+            if action_b in [DiplomaticAction.ESCALATE, DiplomaticAction.DETER]:
+                agent_b.war_exhaustion = min(1.0, agent_b.war_exhaustion + 0.15)
+            elif action_b in [DiplomaticAction.COOPERATE, DiplomaticAction.NEGOTIATE]:
+                agent_b.war_exhaustion = max(0.0, agent_b.war_exhaustion - 0.05)
+    
+    def _calculate_resource_cost(self, action: DiplomaticAction, agent: Agent) -> float:
+        """计算资源消耗"""
+        base_costs = {
+            DiplomaticAction.COOPERATE: 3.0,
+            DiplomaticAction.DEFECT: 2.0,
+            DiplomaticAction.DETER: 6.0,
+            DiplomaticAction.ESCALATE: 10.0,
+            DiplomaticAction.NEGOTIATE: 4.0,
+            DiplomaticAction.SANCTION: 5.0,
+            DiplomaticAction.APPEASE: 4.0,
+            DiplomaticAction.IGNORE: 0.5,
+        }
+        
+        base = base_costs.get(action, 3.0)
+        
+        # 战争疲劳增加成本
+        fatigue_multiplier = 1.0 + agent.war_exhaustion * 0.5
+        
+        # 资源越少，效率越低（边际成本递增）
+        resource_factor = 1.0 + (100.0 - agent.resources) / 100.0
+        
+        return base * fatigue_multiplier * resource_factor * 0.5  # 总体降低消耗
     
     def _print_round_report(self, round_num: int, decisions: Dict,
                            payoff_results: Dict, power_changes: Dict):
