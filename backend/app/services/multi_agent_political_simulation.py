@@ -638,57 +638,48 @@ class MultiAgentPoliticalSimulation:
                 agent_b.war_exhaustion = max(0.0, agent_b.war_exhaustion - 0.05)
     
     def _calculate_resource_income(self, agent: Agent) -> float:
-        """计算资源生成（经济实力）"""
-        # 基础经济产出（根据国家和类型）- 平衡版
+        """计算资源生成（经济实力）- 平衡版"""
+        # 基础经济产出（降低）
         base_income = {
-            # 美国 - 高GDP
-            "usa": 4.0,
-            "china": 3.0,
-            "russia": 2.0,
-            "eu": 3.5,
-            # 资源型国家
-            "saudi": 3.0,  # 石油收入
-            "iran": 1.5,   # 石油但受制裁
-            # 发达经济体
-            "japan": 2.5,
-            "uk": 2.0,
-            "germany": 2.5,
-            "france": 2.0,
-            # 新兴经济体
-            "india": 2.0,
-            "south_korea": 2.0,
-            # 其他国家
-            "israel": 1.5,
-            "turkey": 1.5,
-            "north_korea": 0.5,  # 经济薄弱
-            "brazil": 1.5,
+            "usa": 2.5,
+            "china": 2.0,
+            "russia": 1.5,
+            "eu": 2.2,
+            "saudi": 2.0,
+            "iran": 1.0,
+            "japan": 1.8,
+            "uk": 1.5,
+            "germany": 1.8,
+            "france": 1.5,
+            "india": 1.5,
+            "south_korea": 1.5,
+            "israel": 1.2,
+            "turkey": 1.2,
+            "north_korea": 0.3,
+            "brazil": 1.2,
         }
         
-        income = base_income.get(agent.country, 1.5)
+        income = base_income.get(agent.country, 1.0)
         
         # 势力类型加成（降低）
         type_bonus = {
-            "financial": 1.0,      # 金融集团赚钱能力强
-            "energy": 0.8,         # 能源集团有资源收入
-            "tech": 0.8,           # 科技集团创新收入
-            "military": -0.5,      # 军事集团消耗大
-            "government": 0.3,     # 政府有税收
+            "financial": 0.5,
+            "energy": 0.4,
+            "tech": 0.4,
+            "military": -0.3,
+            "government": 0.2,
         }
         income += type_bonus.get(agent.force_type, 0)
         
-        # 战争疲劳减少经济产出（经济受战争影响）
-        fatigue_penalty = agent.war_exhaustion * 2.0
+        # 战争疲劳减少经济产出
+        fatigue_penalty = agent.war_exhaustion * 1.5
         income -= fatigue_penalty
         
-        # 资源枯竭惩罚（资源低于30时，经济受损）
+        # 资源枯竭惩罚
         if agent.resources < 30:
             income -= (30 - agent.resources) * 0.1
         
-        # 资源充裕奖励（资源高于150时，经济繁荣）
-        if agent.resources > 150:
-            income += 0.5
-        
-        return max(0.2, income)  # 最小收入保障
+        return max(0.1, income)
     
     def _calculate_resource_cost(self, action: DiplomaticAction, agent: Agent) -> float:
         """计算资源消耗 - 修复版"""
