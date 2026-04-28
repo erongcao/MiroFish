@@ -208,8 +208,10 @@ class DiplomacyIntegration:
             "domestic_constraint": domestic_constraint,
         }
     
-    def _map_event_to_action(self, event_type: str) -> DiplomaticAction:
+    def _map_event_to_action(self, event_type: str):
         """将事件类型映射到博弈论行动"""
+        if not DIPLOMACY_AVAILABLE:
+            return None
         mapping = {
             "STATEMENT": DiplomaticAction.DETER,
             "CONDITIONS": DiplomaticAction.NEGOTIATE,
