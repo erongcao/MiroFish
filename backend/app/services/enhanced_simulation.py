@@ -231,11 +231,23 @@ class EnhancedSimulationIntegrator:
         self.cross_agent.save()
         self.event_injector.save()
         
+        # 更新外交系统
+        if hasattr(self, 'diplomacy_integration') and self.diplomacy_integration:
+            self.diplomacy_integration.advance_round()
+        
         summary = self.world_state.get_state_summary()
         print(f"[EnhancedSim] Round {summary['round']}: "
               f"tension={summary['global_tension']:.1f}, "
               f"alive={summary['alive_agents']}/{summary['total_agents']}, "
               f"events={summary['total_events']}")
+        
+        # 打印外交摘要
+        if hasattr(self, 'diplomacy_integration') and self.diplomacy_integration:
+            dip_summary = self.diplomacy_integration.get_summary()
+            if dip_summary.get("status") == "active":
+                print(f"[EnhancedSim] Diplomacy: "
+                      f"alliances={dip_summary.get('alliances', {}).get('active', 0)}, "
+                      f"sanctions={dip_summary.get('sanctions', {}).get('active', 0)}")
     
     def get_enhanced_feed(self, agent_id: str, round_num: int,
                          base_feed: List[Dict]) -> List[Dict]:
@@ -244,6 +256,7 @@ class EnhancedSimulationIntegrator:
         
         enhanced_feed = base_feed.copy()
         
+        # 添加活跃事件
         active_events = self.event_injector.get_active_events(round_num)
         for event in active_events:
             if agent_id in event.affected_agents:
@@ -255,6 +268,39 @@ class EnhancedSimulationIntegrator:
                     "priority": 10
                 })
         
+        # 添加外交上下文
+        if hasattr(self, 'diplomacy_integration') and self.diplomacy_integration:
+            diplomatic_context = self.diplomacy_integration.get_enhanced_context(agent_id)
+            
+            # 添加同盟信息到 feed
+            alliances = diplomatic_context.get("alliances", {})
+            if alliances.get("member_of"):
+                enhanced_feed.insert(0, {
+                    "type": "diplomatic",
+                    "content": f"[外交] 你是 {len(alliances['member_of'])} 个同盟的成员",
+                    "priority": 8
+                })
+            
+            # 添加制裁信息
+            sanctions = diplomatic_context.get("sanctions", {})
+            if sanctions.get("under_sanctions"):
+                total_impact = sanctions.get("total_impact", 0)
+                enhanced_feed.insert(0, {
+                    "type": "diplomatic",
+                    "content": f"[制裁] 你正承受制裁，经济影响: {total_impact:.1%}",
+                    "priority": 9
+                })
+            
+            # 添加核威慑信息
+            nuclear = diplomatic_context.get("nuclear", {})
+            if nuclear.get("has_nukes"):
+                enhanced_feed.insert(0, {
+                    "type": "diplomatic",
+                    "content": f"[核威慑] 拥有 {nuclear.get('warheads', 0)} 枚核弹头",
+                    "priority": 7
+                })
+        
+        # 添加关系上下文
         agent_relationships = {}
         for key, rel in self.world_state.relationships.items():
             if agent_id in [rel.agent_a, rel.agent_b]:
