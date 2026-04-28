@@ -76,6 +76,15 @@ class DiplomacyIntegration:
         self.nuclear = NuclearDeterrence() if NUCLEAR_AVAILABLE else None
         self.domestic = DomesticPolitics() if DOMESTIC_AVAILABLE else None
         
+        # 真实世界数据集成
+        try:
+            from real_world_data import real_world_data
+            self.real_world = real_world_data
+            print("[DiplomacyIntegration] 真实世界数据已加载")
+        except ImportError:
+            self.real_world = None
+            print("[DiplomacyIntegration] 真实世界数据未找到")
+        
         print("[DiplomacyIntegration] 博弈论外交集成器已初始化")
         if self.alliance_system:
             print("[DiplomacyIntegration] 联盟系统已加载")
@@ -89,21 +98,59 @@ class DiplomacyIntegration:
             print("[DiplomacyIntegration] 国内政治系统已加载")
     
     def initialize(self, agent_configs: List[Dict]):
-        """初始化外交系统"""
+        """初始化外交系统 - 使用真实世界数据"""
         if not self.enabled or not self.enable_game_theory:
             return
         
-        # 转换配置
+        # 转换配置 - 使用真实数据增强
         diplomacy_configs = []
         for config in agent_configs:
+            agent_id = str(config.get("agent_id", ""))
+            
+            # 获取真实世界数据
+            if self.real_world:
+                profile = self.real_world.get_profile(agent_id)
+                if profile:
+                    # 使用真实数据覆盖/增强配置
+                    config['gdp'] = profile.gdp_usd
+                    config['military_spending'] = profile.military_spending_usd
+                    config['population'] = profile.population_millions
+                    config['nuclear_warheads'] = profile.nuclear_warheads
+                    config['political_system'] = profile.political_system
+                    config['regime_stability'] = profile.regime_stability
+                    print(f"[DiplomacyIntegration] {agent_id}: 已加载真实数据 GDP=${profile.gdp_usd}T")
+            
             diplomacy_configs.append({
-                "agent_id": str(config.get("agent_id", "")),
+                "agent_id": agent_id,
                 "stance": config.get("stance", "neutral"),
                 "sentiment_bias": config.get("sentiment_bias", 0.0),
+                "resources": config.get("gdp", 1.0) * 10,  # GDP作为资源基础
             })
         
         self.diplomacy.initialize_agents(diplomacy_configs)
         self.initialized = True
+        
+        # 使用真实数据设置初始信任度
+        if self.real_world:
+            for i, config_a in enumerate(agent_configs):
+                for config_b in agent_configs[i+1:]:
+                    a_id = str(config_a.get("agent_id", ""))
+                    b_id = str(config_b.get("agent_id", ""))
+                    
+                    # 计算基于真实数据的初始信任
+                    initial_trust = self.real_world.calculate_initial_trust(a_id, b_id)
+                    
+                    # 设置到外交系统
+                    if a_id in self.diplomacy.agents and b_id in self.diplomacy.agents:
+                        self.diplomacy.agents[a_id].trust_memory[b_id] = initial_trust
+                        self.diplomacy.agents[b_id].trust_memory[a_id] = initial_trust
+                        
+                        # 如果是同盟，设置更高信任
+                        if self.real_world.are_allies(a_id, b_id):
+                            self.diplomacy.agents[a_id].trust_memory[b_id] = min(1.0, initial_trust + 0.2)
+                            self.diplomacy.agents[b_id].trust_memory[a_id] = min(1.0, initial_trust + 0.2)
+        
+        # 初始化扩展模块...
         
         # 初始化扩展模块
         if self.domestic:
@@ -140,9 +187,16 @@ class DiplomacyIntegration:
                         power=config.get("mediator_power", 0.5),
                         region=config.get("region"),
                     )
+            # 注册UN和EU作为默认调解者
+            if self.real_world:
+                self.mediation.register_mediator("un", "un", credibility=0.8, power=0.6)
+                self.mediation.register_mediator("eu", "regional", credibility=0.7, power=0.5, region="europe")
         
         print(f"[DiplomacyIntegration] 已初始化 {len(diplomacy_configs)} 个 agent 的外交状态")
-    
+        if self.real_world:
+            print(f"[DiplomacyIntegration] 真实世界数据已集成")
+            print(f"[DiplomacyIntegration] 示例信任度: usa-china={self.real_world.calculate_initial_trust('usa', 'china'):.2f}")
+
     def process_diplomatic_event(self, event: Dict, round_num: int) -> Dict:
         """处理外交事件 - 使用博弈论机制"""
         if not self.enabled or not self.initialized:

@@ -41,7 +41,7 @@ EVENT_TEMPLATES = [
     {'event_type': 'WITHDRAW', 'desc': '撤军/让步'},
 ]
 
-# 国家间关系矩阵（初始倾向）
+# 使用真实世界数据的关系矩阵
 RELATIONSHIP_BIAS = {
     ('usa', 'china'): -0.3,
     ('usa', 'russia'): -0.5,
