@@ -817,8 +817,16 @@ class MultiAgentPoliticalSimulation:
             action_b = result.get("action_b", DiplomaticAction.COOPERATE)
             
             # 1. 资源消耗（根据行动类型）
-            cost_a = self._calculate_resource_cost(action_a, agent_a)
-            cost_b = self._calculate_resource_cost(action_b, agent_b)
+            # 伊朗特殊处理：资源低于50时消耗减半（避免崩溃太快）
+            if agent_a.country == "iran" and agent_a.resources < 50:
+                cost_a = self._calculate_resource_cost(action_a, agent_a) * 0.3  # 消耗降至30%
+            else:
+                cost_a = self._calculate_resource_cost(action_a, agent_a)
+            
+            if agent_b.country == "iran" and agent_b.resources < 50:
+                cost_b = self._calculate_resource_cost(action_b, agent_b) * 0.3  # 消耗降至30%
+            else:
+                cost_b = self._calculate_resource_cost(action_b, agent_b)
             
             # 2. 资源生成（经济实力）
             income_a = self._calculate_resource_income(agent_a)
@@ -846,16 +854,16 @@ class MultiAgentPoliticalSimulation:
             # 5. 伊朗内部冲突惩罚（革命卫队 vs 政府）
             if agent_a.country == "iran" and agent_b.country == "iran":
                 if agent_a.force_type != agent_b.force_type:
-                    # 革命卫队与政府冲突，双方资源消耗
-                    agent_a.resources = max(10.0, agent_a.resources - 2.0)
-                    agent_b.resources = max(10.0, agent_b.resources - 2.0)
+                    # 革命卫队与政府冲突，双方资源消耗（但可控）
+                    agent_a.resources = max(10.0, agent_a.resources - 0.5)
+                    agent_b.resources = max(10.0, agent_b.resources - 0.5)
             
             # 6. 美国内部冲突惩罚（军工 vs 华尔街等）
             if agent_a.country == "usa" and agent_b.country == "usa":
                 if agent_a.force_type != agent_b.force_type:
-                    # 不同势力冲突，资源消耗
-                    agent_a.resources = max(10.0, agent_a.resources - 1.0)
-                    agent_b.resources = max(10.0, agent_b.resources - 1.0)
+                    # 不同势力冲突，资源消耗（但可控）
+                    agent_a.resources = max(10.0, agent_a.resources - 0.3)
+                    agent_b.resources = max(10.0, agent_b.resources - 0.3)
     
     def _calculate_resource_income(self, agent: Agent) -> float:
         """计算资源生成（经济系统v2 - 战争消耗版）"""
@@ -910,61 +918,61 @@ class MultiAgentPoliticalSimulation:
         
         # 伊朗特殊惩罚（战争+制裁+封锁）
         if agent.country == "iran":
-            # 战争摧毁了65% GDP
-            income -= 0.3
+            # 战争摧毁了65% GDP，但革命卫队控制经济+外部支持
+            income -= 0.1
             # 通胀70%，货币贬值30倍
-            income -= 0.2
-            # 霍尔木兹海峡封锁影响石油出口
-            income -= 0.2
-            # 革命卫队控制经济，效率低下
+            income -= 0.05
+            # 霍尔木兹海峡封锁影响石油出口（但仍有影子出口+中俄支持）
+            income -= 0.05
+            # 革命卫队控制经济，效率低下但有外部支持
             if agent.force_type == "military":
-                income -= 0.1
+                income -= 0.05
         
         # 美国特殊惩罚（战争成本+国内分裂）
         elif agent.country == "usa":
             # 500亿美元战争花费
-            income -= 0.2
+            income -= 0.1
             # 国内政治分裂影响经济
             if len(agent.enemies) > 3:
-                income -= 0.2
+                income -= 0.1
         
         # 以色列特殊惩罚（本土受袭）
         elif agent.country == "israel":
-            income -= 0.2
+            income -= 0.1
         
         # 欧盟特殊惩罚（能源危机）
         elif agent.country == "eu":
-            income -= 0.3
+            income -= 0.15
         
         # 中国特殊惩罚（能源进口受阻）
         elif agent.country == "china":
-            income -= 0.1
+            income -= 0.05
         
         # 俄罗斯特殊惩罚（制裁）
         elif agent.country == "russia":
-            income -= 0.1
+            income -= 0.05
         
         # 海湾国家（石油收入波动）
         elif agent.country in ["saudi", "uae", "bahrain"]:
-            income -= 0.1
+            income -= 0.05
         
         # 亚洲国家（能源进口受阻）
         elif agent.country in ["india", "japan", "south_korea"]:
-            income -= 0.15
+            income -= 0.1
         
-        return max(0.1, income)  # 最小收入保障
+        return max(0.3, income)  # 最小收入保障（提高）
     
     def _calculate_resource_cost(self, action: DiplomaticAction, agent: Agent) -> float:
         """计算资源消耗 - 战争消耗版"""
         base_costs = {
-            DiplomaticAction.COOPERATE: 1.0,      # 合作成本低
-            DiplomaticAction.DEFECT: 1.5,         # 背叛成本
-            DiplomaticAction.DETER: 5.0,          # 威慑消耗大
-            DiplomaticAction.ESCALATE: 8.0,     # 升级冲突消耗巨大
-            DiplomaticAction.NEGOTIATE: 2.0,    # 谈判成本
-            DiplomaticAction.SANCTION: 4.0,     # 制裁消耗大
-            DiplomaticAction.APPEASE: 2.5,      # 绥靖成本
-            DiplomaticAction.IGNORE: 0.5,       # 无视成本
+            DiplomaticAction.COOPERATE: 0.5,      # 合作成本低
+            DiplomaticAction.DEFECT: 1.0,         # 背叛成本
+            DiplomaticAction.DETER: 2.0,          # 威慑消耗
+            DiplomaticAction.ESCALATE: 3.0,     # 升级冲突消耗（大幅降低）
+            DiplomaticAction.NEGOTIATE: 1.0,    # 谈判成本
+            DiplomaticAction.SANCTION: 2.0,     # 制裁消耗
+            DiplomaticAction.APPEASE: 1.5,      # 绥靖成本
+            DiplomaticAction.IGNORE: 0.3,       # 无视成本
         }
         
         base = base_costs.get(action, 2.0)
