@@ -181,10 +181,72 @@ class MultiAgentPoliticalSimulation:
         # 6. 其他国家势力
         self._add_other_country_agents()
         
-        # 7. 初始化博弈论引擎
+        # 7. 根据报告调整初始状态（战争已持续2个月）
+        self._adjust_initial_state_for_war()
+        
+        # 8. 初始化博弈论引擎
         self._initialize_game_theory_engine()
         
         print(f"\n[初始化完成] 共 {len(self.agents)} 个智能体")
+    
+    def _adjust_initial_state_for_war(self):
+        """根据战争报告调整初始状态（2026年4月，战争已持续2个月）"""
+        print("\n[战争状态调整] 2026年4月，美以伊战争持续2个月")
+        
+        for agent_id, agent in self.agents.items():
+            # 伊朗：GDP的65%被摧毁，通胀70%，货币贬值30倍
+            if agent.country == "iran":
+                agent.resources = 35.0  # 经济崩溃
+                agent.war_exhaustion = 0.65  # 高战争疲劳
+                print(f"  [伊朗] {agent.name}: 资源={agent.resources:.1f} (经济崩溃)")
+            
+            # 美国：13人死亡，365人受伤，花费500亿美元
+            elif agent.country == "usa":
+                agent.resources = 85.0  # 高债务但仍有资源
+                agent.war_exhaustion = 0.25  # 中等战争疲劳
+                print(f"  [美国] {agent.name}: 资源={agent.resources:.1f} (战争成本)")
+            
+            # 以色列：本土受打击，2238人受伤
+            elif agent.country == "israel":
+                agent.resources = 70.0
+                agent.war_exhaustion = 0.45
+                print(f"  [以色列] {agent.name}: 资源={agent.resources:.1f} (本土受袭)")
+            
+            # 中国：能源进口受阻，但总体稳定
+            elif agent.country == "china":
+                agent.resources = 90.0
+                agent.war_exhaustion = 0.15
+                print(f"  [中国] {agent.name}: 资源={agent.resources:.1f} (能源受阻)")
+            
+            # 俄罗斯：受制裁但支持伊朗
+            elif agent.country == "russia":
+                agent.resources = 75.0
+                agent.war_exhaustion = 0.20
+                print(f"  [俄罗斯] {agent.name}: 资源={agent.resources:.1f} (制裁+支持)")
+            
+            # 欧盟：能源危机，通胀高企
+            elif agent.country == "eu":
+                agent.resources = 60.0
+                agent.war_exhaustion = 0.30
+                print(f"  [欧盟] {agent.name}: 资源={agent.resources:.1f} (能源危机)")
+            
+            # 沙特：石油收入波动，立场分化
+            elif agent.country == "saudi":
+                agent.resources = 80.0
+                agent.war_exhaustion = 0.20
+                print(f"  [沙特] {agent.name}: 资源={agent.resources:.1f} (石油波动)")
+            
+            # 海湾国家：阿联酋、巴林强硬
+            elif agent.country in ["uae", "bahrain"]:
+                agent.resources = 75.0
+                agent.war_exhaustion = 0.25
+                print(f"  [海湾] {agent.name}: 资源={agent.resources:.1f} (强硬立场)")
+            
+            # 印度、日本、韩国：能源进口受阻
+            elif agent.country in ["india", "japan", "south_korea"]:
+                agent.resources = 70.0
+                agent.war_exhaustion = 0.20
+                print(f"  [亚洲] {agent.name}: 资源={agent.resources:.1f} (能源受阻)")
     
     def _initialize_game_theory_engine(self):
         """初始化博弈论引擎"""
@@ -352,9 +414,9 @@ class MultiAgentPoliticalSimulation:
              "stances": {"china": -0.8, "usa": 0.9}},
             "japan_business": {"name": "日本财阀", "country": "japan", "force_type": "financial", "power": 0.7,
              "stances": {"china": -0.2, "usa": 0.6}},
-            # 伊朗
+            # 伊朗 - 战争已持续2个月，经济崩溃
             "iran_guard": {"name": "伊朗革命卫队", "country": "iran", "force_type": "military", "power": 0.7,
-             "stances": {"usa": -0.9, "israel": -0.95}},
+             "stances": {"usa": -0.95, "israel": -0.95}},
             "iran_government": {"name": "伊朗政府", "country": "iran", "force_type": "government", "power": 0.6,
              "stances": {"usa": -0.8, "china": 0.4}},
             # 沙特
