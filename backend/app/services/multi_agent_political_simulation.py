@@ -782,74 +782,82 @@ class MultiAgentPoliticalSimulation:
                 agent_b.war_exhaustion = max(0.0, agent_b.war_exhaustion - 0.05)
     
     def _calculate_resource_income(self, agent: Agent) -> float:
-        """计算资源生成（经济实力）- 平衡版"""
-        # 基础经济产出（降低）
+        """计算资源生成（经济系统v2 - 战争消耗版）"""
+        # 基础经济产出（大幅降低，战争时期经济受损）
         base_income = {
-            "usa": 2.5,
-            "china": 2.0,
-            "russia": 1.5,
-            "eu": 2.2,
-            "saudi": 2.0,
-            "iran": 1.0,
-            "japan": 1.8,
-            "uk": 1.5,
-            "germany": 1.8,
-            "france": 1.5,
-            "india": 1.5,
-            "south_korea": 1.5,
-            "israel": 1.2,
-            "turkey": 1.2,
-            "north_korea": 0.3,
-            "brazil": 1.2,
+            "usa": 1.5,      # 美国高债务，增长乏力
+            "china": 1.2,    # 中国转型期，增速放缓
+            "russia": 0.8,   # 俄罗斯受制裁，经济困难
+            "eu": 1.3,       # 欧盟能源危机，通胀高企
+            "saudi": 1.0,    # 沙特石油收入但波动大
+            "iran": 0.5,     # 伊朗受制裁，经济脆弱
+            "japan": 0.9,    # 日本长期停滞
+            "uk": 0.8,       # 英国脱欧后经济疲软
+            "germany": 1.0,  # 德国能源危机
+            "france": 0.9,   # 法国社会动荡
+            "india": 0.7,    # 印度基础设施不足
+            "south_korea": 0.8,  # 韩国出口依赖
+            "israel": 0.6,   # 以色列军费高
+            "turkey": 0.5,   # 土耳其通胀严重
+            "north_korea": 0.2,  # 朝鲜经济极度困难
+            "brazil": 0.6,   # 巴西政治不稳定
         }
         
-        income = base_income.get(agent.country, 1.0)
+        income = base_income.get(agent.country, 0.5)
         
         # 势力类型加成（降低）
         type_bonus = {
-            "financial": 0.5,
-            "energy": 0.4,
-            "tech": 0.4,
-            "military": -0.3,
-            "government": 0.2,
+            "financial": 0.3,      # 金融集团赚钱能力强
+            "energy": 0.2,         # 能源集团有资源收入
+            "tech": 0.2,           # 科技集团创新收入
+            "military": -0.3,      # 军事集团消耗大
+            "government": 0.1,     # 政府有税收
         }
         income += type_bonus.get(agent.force_type, 0)
         
-        # 战争疲劳减少经济产出
-        fatigue_penalty = agent.war_exhaustion * 1.5
+        # 战争疲劳严重减少经济产出（经济受战争影响）
+        fatigue_penalty = agent.war_exhaustion * 2.0
         income -= fatigue_penalty
         
-        # 资源枯竭惩罚
-        if agent.resources < 30:
-            income -= (30 - agent.resources) * 0.1
+        # 国内冲突惩罚（美国内部分裂影响经济）
+        # 如果Agent有敌对关系，经济产出降低
+        domestic_conflict = len(agent.enemies) * 0.1
+        income -= domestic_conflict
         
-        return max(0.1, income)
+        # 资源枯竭惩罚（资源低于30时，经济严重受损）
+        if agent.resources < 30:
+            income -= (30 - agent.resources) * 0.3
+        
+        # 高通胀惩罚（资源高于100时，通胀压力）
+        if agent.resources > 100:
+            income -= (agent.resources - 100) * 0.02
+        
+        return max(0.1, income)  # 最小收入保障
     
     def _calculate_resource_cost(self, action: DiplomaticAction, agent: Agent) -> float:
-        """计算资源消耗 - 修复版"""
+        """计算资源消耗 - 战争消耗版"""
         base_costs = {
-            DiplomaticAction.COOPERATE: 2.0,      # 降低合作成本
+            DiplomaticAction.COOPERATE: 1.0,      # 合作成本低
             DiplomaticAction.DEFECT: 1.5,         # 背叛成本
-            DiplomaticAction.DETER: 4.0,          # 降低威慑成本
-            DiplomaticAction.ESCALATE: 6.0,     # 降低升级成本
-            DiplomaticAction.NEGOTIATE: 2.5,    # 降低谈判成本
-            DiplomaticAction.SANCTION: 3.0,     # 降低制裁成本
+            DiplomaticAction.DETER: 5.0,          # 威慑消耗大
+            DiplomaticAction.ESCALATE: 8.0,     # 升级冲突消耗巨大
+            DiplomaticAction.NEGOTIATE: 2.0,    # 谈判成本
+            DiplomaticAction.SANCTION: 4.0,     # 制裁消耗大
             DiplomaticAction.APPEASE: 2.5,      # 绥靖成本
             DiplomaticAction.IGNORE: 0.5,       # 无视成本
         }
         
         base = base_costs.get(action, 2.0)
         
-        # 战争疲劳增加成本（但不过度）
-        fatigue_multiplier = 1.0 + agent.war_exhaustion * 0.3
+        # 战争疲劳增加成本
+        fatigue_multiplier = 1.0 + agent.war_exhaustion * 0.5
         
-        # 资源越少，效率越低（轻微影响）
+        # 资源越少，效率越低
         resource_factor = 1.0 + (100.0 - agent.resources) / 200.0
         
-        # 总体成本（降低系数）
-        cost = base * fatigue_multiplier * resource_factor * 0.3
+        cost = base * fatigue_multiplier * resource_factor
         
-        return max(0.5, min(5.0, cost))  # 限制范围 0.5-5.0
+        return max(0.5, min(15.0, cost))  # 限制范围
     
     def _print_round_report(self, round_num: int, decisions: Dict,
                            payoff_results: Dict, power_changes: Dict):
