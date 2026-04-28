@@ -130,6 +130,114 @@ result = agent.decide_action(context, observation)
 
 详细文档请查看：[博弈论模块 README](./backend/app/services/game_theory/README.md)
 
+---
+
+## 🌍 地缘政治外交系统 (v2.0)
+
+MiroFish 现在包含完整的**地缘政治外交模拟系统**，基于真实博弈论机制，支持复杂的多边外交互动。
+
+### 核心模块
+
+| 模块 | 文件 | 功能 |
+|------|------|------|
+| **博弈论外交引擎** | `game_theory_diplomacy.py` | 囚徒困境收益矩阵、升级阶梯、声誉系统 |
+| **联盟机制** | `alliance_system.py` | 多Agent联合行动、集体防御、凝聚力动态 |
+| **制裁网络** | `sanction_network.py` | 多边制裁、反制裁、经济影响追踪 |
+| **第三方调解** | `third_party_mediation.py` | UN/欧盟/中立国调解、成功概率计算 |
+| **核威慑** | `nuclear_deterrence.py` | MAD逻辑、二次打击、核门槛控制 |
+| **国内政治** | `domestic_politics.py` | 民意、政治资本、体制约束 |
+
+### 外交行动类型
+
+- 🤝 **合作** (Cooperate) - 建立信任
+- ⚔️ **背叛** (Defect) - 短期收益但损害声誉
+- 🛡️ **威慑** (Deter) - 展示军力
+- 📈 **升级** (Escalate) - 冲突升级
+- 🗣️ **谈判** (Negotiate) - 外交协商
+- ⚠️ **制裁** (Sanction) - 经济施压
+- 🙇 **绥靖** (Appease) - 让步求和
+
+### 冲突升级阶梯
+
+```
+和平 → 紧张 → 危机 → 制裁 → 代理人战争 → 有限战争 → 全面战争
+```
+
+### 联盟类型
+
+| 类型 | 特性 |
+|------|------|
+| **防御同盟** | 受攻击时自动互助 |
+| **进攻同盟** | 共同军事行动 |
+| **经济同盟** | 贸易加成、集体制裁 |
+| **情报同盟** | 信息共享 |
+| **综合同盟** | 以上全部 |
+
+### 使用示例
+
+```python
+from diplomacy_integration import DiplomacyIntegration
+
+# 初始化外交系统
+integration = DiplomacyIntegration('/tmp/sim', {
+    'enable_game_theory_diplomacy': True,
+    'escalation_ladder': True,
+    'reputation_system': True,
+})
+
+# 配置Agent（含核大国、政治体制）
+agent_configs = [
+    {'agent_id': 'usa', 'stance': 'opposing', 'nuclear_warheads': 5800, 
+     'political_system': 'democracy'},
+    {'agent_id': 'china', 'stance': 'neutral', 'nuclear_warheads': 350,
+     'political_system': 'autocracy', 'no_first_use': True},
+    {'agent_id': 'russia', 'stance': 'opposing', 'nuclear_warheads': 6500,
+     'political_system': 'hybrid'},
+]
+
+integration.initialize(agent_configs)
+
+# 处理外交事件
+result = integration.process_diplomatic_event({
+    'actor': 'usa',
+    'target': 'russia', 
+    'event_type': 'ULTIMATUM',
+}, round_num=1)
+
+# 核威慑会自动阻止全面战争
+print(f"战争触发: {result['war_triggered']}")
+print(f"核威慑: {result['nuclear_deterrence']}")
+
+# 提议同盟
+alliance = integration.propose_alliance('usa', ['uk', 'france'], 'defensive', 1)
+
+# 实施制裁
+sanction = integration.impose_sanction(['usa', 'eu'], 'russia', 'trade', 'severe', 1)
+
+# 获取增强上下文（包含所有模块信息）
+context = integration.get_enhanced_context('usa')
+```
+
+### 前端监控面板
+
+访问 `GeopoliticalDashboard` 查看实时外交状态：
+
+- 📊 全局紧张度、战争事件、**活跃同盟**、**制裁事件**、**核大国**
+- 🤝 同盟列表与凝聚力
+- ⚠️ 制裁详情与经济影响
+- 🕊️ 调解统计
+- ☢️ 核对峙与MAD概率
+- 🌐 各国状态（含核/制裁徽章、外交关系）
+
+### API 端点
+
+| 端点 | 说明 |
+|------|------|
+| `GET /api/simulation/{id}/diplomacy/summary` | 完整外交摘要 |
+| `GET /api/simulation/{id}/diplomacy/country/{country_id}` | 国家外交上下文 |
+
+---
+
 ## 🔄 工作流程
 
 1. **图谱构建**：现实种子提取 & 个体与群体记忆注入 & GraphRAG构建

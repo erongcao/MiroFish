@@ -130,6 +130,114 @@ result = agent.decide_action(context, observation)
 
 See [Game Theory Module README](./backend/app/services/game_theory/README.md) for full documentation.
 
+---
+
+## 🌍 Geopolitical Diplomacy System (v2.0)
+
+MiroFish now includes a complete **geopolitical diplomacy simulation system** based on real game theory mechanisms, supporting complex multilateral diplomatic interactions.
+
+### Core Modules
+
+| Module | File | Function |
+|--------|------|----------|
+| **Game Theory Diplomacy Engine** | `game_theory_diplomacy.py` | Prisoner's dilemma payoff matrices, escalation ladder, reputation system |
+| **Alliance System** | `alliance_system.py` | Multi-agent joint actions, collective defense, cohesion dynamics |
+| **Sanction Network** | `sanction_network.py` | Multilateral sanctions, counter-sanctions, economic impact tracking |
+| **Third-Party Mediation** | `third_party_mediation.py` | UN/EU/neutral country mediation, success probability calculation |
+| **Nuclear Deterrence** | `nuclear_deterrence.py` | MAD logic, second-strike, nuclear threshold control |
+| **Domestic Politics** | `domestic_politics.py` | Public opinion, political capital, regime constraints |
+
+### Diplomatic Action Types
+
+- 🤝 **Cooperate** - Build trust
+- ⚔️ **Defect** - Short-term gain but damages reputation
+- 🛡️ **Deter** - Show military strength
+- 📈 **Escalate** - Conflict escalation
+- 🗣️ **Negotiate** - Diplomatic negotiation
+- ⚠️ **Sanction** - Economic pressure
+- 🙇 **Appease** - Concession for peace
+
+### Conflict Escalation Ladder
+
+```
+Peace → Tension → Crisis → Sanctions → Proxy War → Limited War → Total War
+```
+
+### Alliance Types
+
+| Type | Features |
+|------|----------|
+| **Defensive Alliance** | Automatic mutual defense when attacked |
+| **Offensive Alliance** | Joint military operations |
+| **Economic Alliance** | Trade bonuses, collective sanctions |
+| **Intelligence Alliance** | Information sharing |
+| **Multi Alliance** | All of the above |
+
+### Usage Example
+
+```python
+from diplomacy_integration import DiplomacyIntegration
+
+# Initialize diplomacy system
+integration = DiplomacyIntegration('/tmp/sim', {
+    'enable_game_theory_diplomacy': True,
+    'escalation_ladder': True,
+    'reputation_system': True,
+})
+
+# Configure agents (including nuclear powers, political systems)
+agent_configs = [
+    {'agent_id': 'usa', 'stance': 'opposing', 'nuclear_warheads': 5800, 
+     'political_system': 'democracy'},
+    {'agent_id': 'china', 'stance': 'neutral', 'nuclear_warheads': 350,
+     'political_system': 'autocracy', 'no_first_use': True},
+    {'agent_id': 'russia', 'stance': 'opposing', 'nuclear_warheads': 6500,
+     'political_system': 'hybrid'},
+]
+
+integration.initialize(agent_configs)
+
+# Process diplomatic event
+result = integration.process_diplomatic_event({
+    'actor': 'usa',
+    'target': 'russia', 
+    'event_type': 'ULTIMATUM',
+}, round_num=1)
+
+# Nuclear deterrence automatically prevents total war
+print(f"War triggered: {result['war_triggered']}")
+print(f"Nuclear deterrence: {result['nuclear_deterrence']}")
+
+# Propose alliance
+alliance = integration.propose_alliance('usa', ['uk', 'france'], 'defensive', 1)
+
+# Impose sanctions
+sanction = integration.impose_sanction(['usa', 'eu'], 'russia', 'trade', 'severe', 1)
+
+# Get enhanced context (includes all module information)
+context = integration.get_enhanced_context('usa')
+```
+
+### Frontend Dashboard
+
+Visit `GeopoliticalDashboard` to view real-time diplomatic status:
+
+- 📊 Global tension, war events, **active alliances**, **sanctions**, **nuclear powers**
+- 🤝 Alliance list with cohesion bars
+- ⚠️ Sanction details with economic impact
+- 🕊️ Mediation statistics
+- ☢️ Nuclear standoffs with MAD probability
+- 🌐 Country status (with nuclear/sanction badges, diplomatic relations)
+
+### API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/simulation/{id}/diplomacy/summary` | Full diplomacy summary |
+| `GET /api/simulation/{id}/diplomacy/country/{country_id}` | Country diplomatic context |
+
+---
+
 ## 🔄 Workflow
 
 1. **Graph Building**: Seed extraction & Individual/collective memory injection & GraphRAG construction
