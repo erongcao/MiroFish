@@ -636,27 +636,30 @@ class MultiAgentPoliticalSimulation:
                 agent_b.war_exhaustion = max(0.0, agent_b.war_exhaustion - 0.05)
     
     def _calculate_resource_cost(self, action: DiplomaticAction, agent: Agent) -> float:
-        """计算资源消耗"""
+        """计算资源消耗 - 修复版"""
         base_costs = {
-            DiplomaticAction.COOPERATE: 3.0,
-            DiplomaticAction.DEFECT: 2.0,
-            DiplomaticAction.DETER: 6.0,
-            DiplomaticAction.ESCALATE: 10.0,
-            DiplomaticAction.NEGOTIATE: 4.0,
-            DiplomaticAction.SANCTION: 5.0,
-            DiplomaticAction.APPEASE: 4.0,
-            DiplomaticAction.IGNORE: 0.5,
+            DiplomaticAction.COOPERATE: 2.0,      # 降低合作成本
+            DiplomaticAction.DEFECT: 1.5,         # 背叛成本
+            DiplomaticAction.DETER: 4.0,          # 降低威慑成本
+            DiplomaticAction.ESCALATE: 6.0,     # 降低升级成本
+            DiplomaticAction.NEGOTIATE: 2.5,    # 降低谈判成本
+            DiplomaticAction.SANCTION: 3.0,     # 降低制裁成本
+            DiplomaticAction.APPEASE: 2.5,      # 绥靖成本
+            DiplomaticAction.IGNORE: 0.5,       # 无视成本
         }
         
-        base = base_costs.get(action, 3.0)
+        base = base_costs.get(action, 2.0)
         
-        # 战争疲劳增加成本
-        fatigue_multiplier = 1.0 + agent.war_exhaustion * 0.5
+        # 战争疲劳增加成本（但不过度）
+        fatigue_multiplier = 1.0 + agent.war_exhaustion * 0.3
         
-        # 资源越少，效率越低（边际成本递增）
-        resource_factor = 1.0 + (100.0 - agent.resources) / 100.0
+        # 资源越少，效率越低（轻微影响）
+        resource_factor = 1.0 + (100.0 - agent.resources) / 200.0
         
-        return base * fatigue_multiplier * resource_factor * 0.5  # 总体降低消耗
+        # 总体成本（降低系数）
+        cost = base * fatigue_multiplier * resource_factor * 0.3
+        
+        return max(0.5, min(5.0, cost))  # 限制范围 0.5-5.0
     
     def _print_round_report(self, round_num: int, decisions: Dict,
                            payoff_results: Dict, power_changes: Dict):
