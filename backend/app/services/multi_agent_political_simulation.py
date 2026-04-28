@@ -495,6 +495,10 @@ class MultiAgentPoliticalSimulation:
                     agent_a_id, agent_b_id, action_a, action_b
                 )
                 
+                # 添加行动信息到结果
+                result["action_a"] = action_a
+                result["action_b"] = action_b
+                
                 results[f"{agent_a_id}|{agent_b_id}"] = result
         
         return results
