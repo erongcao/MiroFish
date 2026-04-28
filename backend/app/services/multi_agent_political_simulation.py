@@ -842,6 +842,20 @@ class MultiAgentPoliticalSimulation:
                 agent_b.war_exhaustion = min(1.0, agent_b.war_exhaustion + 0.15)
             elif action_b in [DiplomaticAction.COOPERATE, DiplomaticAction.NEGOTIATE]:
                 agent_b.war_exhaustion = max(0.0, agent_b.war_exhaustion - 0.05)
+            
+            # 5. 伊朗内部冲突惩罚（革命卫队 vs 政府）
+            if agent_a.country == "iran" and agent_b.country == "iran":
+                if agent_a.force_type != agent_b.force_type:
+                    # 革命卫队与政府冲突，双方资源消耗
+                    agent_a.resources = max(10.0, agent_a.resources - 2.0)
+                    agent_b.resources = max(10.0, agent_b.resources - 2.0)
+            
+            # 6. 美国内部冲突惩罚（军工 vs 华尔街等）
+            if agent_a.country == "usa" and agent_b.country == "usa":
+                if agent_a.force_type != agent_b.force_type:
+                    # 不同势力冲突，资源消耗
+                    agent_a.resources = max(10.0, agent_a.resources - 1.0)
+                    agent_b.resources = max(10.0, agent_b.resources - 1.0)
     
     def _calculate_resource_income(self, agent: Agent) -> float:
         """计算资源生成（经济系统v2 - 战争消耗版）"""
@@ -893,6 +907,50 @@ class MultiAgentPoliticalSimulation:
         # 高通胀惩罚（资源高于100时，通胀压力）
         if agent.resources > 100:
             income -= (agent.resources - 100) * 0.02
+        
+        # 伊朗特殊惩罚（战争+制裁+封锁）
+        if agent.country == "iran":
+            # 战争摧毁了65% GDP
+            income -= 0.3
+            # 通胀70%，货币贬值30倍
+            income -= 0.2
+            # 霍尔木兹海峡封锁影响石油出口
+            income -= 0.2
+            # 革命卫队控制经济，效率低下
+            if agent.force_type == "military":
+                income -= 0.1
+        
+        # 美国特殊惩罚（战争成本+国内分裂）
+        elif agent.country == "usa":
+            # 500亿美元战争花费
+            income -= 0.2
+            # 国内政治分裂影响经济
+            if len(agent.enemies) > 3:
+                income -= 0.2
+        
+        # 以色列特殊惩罚（本土受袭）
+        elif agent.country == "israel":
+            income -= 0.2
+        
+        # 欧盟特殊惩罚（能源危机）
+        elif agent.country == "eu":
+            income -= 0.3
+        
+        # 中国特殊惩罚（能源进口受阻）
+        elif agent.country == "china":
+            income -= 0.1
+        
+        # 俄罗斯特殊惩罚（制裁）
+        elif agent.country == "russia":
+            income -= 0.1
+        
+        # 海湾国家（石油收入波动）
+        elif agent.country in ["saudi", "uae", "bahrain"]:
+            income -= 0.1
+        
+        # 亚洲国家（能源进口受阻）
+        elif agent.country in ["india", "japan", "south_korea"]:
+            income -= 0.15
         
         return max(0.1, income)  # 最小收入保障
     
