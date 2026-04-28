@@ -1,3 +1,48 @@
+# 增强模拟模块导入
+import sys
+import os
+
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+    from app.services.enhanced_simulation import (
+        EnhancedSimulationIntegrator,
+        ENHANCED_MODE,
+        classify_action_type
+    )
+    print(f"[Enhanced] 增强模拟模块已加载 (ENHANCED_MODE={ENHANCED_MODE})")
+except ImportError as e:
+    print(f"[Enhanced] 增强模拟模块导入失败: {e}")
+    ENHANCED_MODE = False
+    EnhancedSimulationIntegrator = None
+    classify_action_type = lambda x: "NEUTRAL"
+
+# 辅助函数
+def fetch_all_posts_from_db(db_path, platform="twitter"):
+    """从数据库获取所有帖子"""
+    posts = []
+    try:
+        import sqlite3
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        tables = ["posts", "tweets", "reddit_posts"]
+        for table in tables:
+            try:
+                cursor.execute(f"SELECT * FROM {table} LIMIT 1")
+                cursor.execute(f"SELECT * FROM {table}")
+                rows = cursor.fetchall()
+                columns = [description[0] for description in cursor.description]
+                for row in rows:
+                    post = dict(zip(columns, row))
+                    post["platform"] = platform
+                    posts.append(post)
+                break
+            except:
+                continue
+        conn.close()
+    except Exception as e:
+        print(f"[Enhanced] 获取帖子失败: {e}")
+    return posts
+
 """
 OASIS 双平台并行模拟预设脚本
 同时运行Twitter和Reddit模拟，读取相同的配置文件
@@ -1162,6 +1207,80 @@ async def run_twitter_simulation(
     await result.env.reset()
     log_info("环境已启动")
     
+    # 增强模拟模块初始化
+    enhanced_integrator = None
+    enhanced_integrator_reddit = None
+    if ENHANCED_MODE:
+        try:
+            import csv
+            twitter_profiles_path = os.path.join(simulation_dir, "twitter_profiles.csv")
+            agent_configs = []
+            if os.path.exists(twitter_profiles_path):
+                with open(twitter_profiles_path, "r", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    for i, row in enumerate(reader):
+                        agent_configs.append({
+                            "agent_id": str(row.get("user_id", i)),
+                            "name": row.get("name", f"Agent_{i}"),
+                            "platform": "twitter"
+                        })
+            
+            if agent_configs:
+                enhanced_config = {
+                    "initial_tension": 40.0,
+                    "event_injector": {
+                        "base_probability": 0.05,
+                        "min_rounds_between_events": 3
+                    },
+                    "cross_agent": {
+                        "min_comments_per_round": 1,
+                        "max_posts_in_feed": 10
+                    }
+                }
+                enhanced_integrator = EnhancedSimulationIntegrator(
+                    simulation_dir,
+                    enhanced_config
+                )
+                enhanced_integrator.initialize(agent_configs)
+                log_info("增强模拟模块已初始化")
+        except Exception as e:
+            log_info(f"增强模拟初始化失败: {e}")
+            enhanced_integrator = None
+        
+        # 初始化双层桥接器（地缘政治 + 社交媒体）
+        try:
+            from app.services.two_layer_bridge import TwoLayerBridge
+            two_layer_bridge = TwoLayerBridge(simulation_dir, config)
+            if two_layer_bridge.geo_simulator:
+                # 设置高初始紧张度
+                two_layer_bridge.geo_simulator.global_tension = 85.0
+                from app.services.three_layer_simulator import MilitaryEvent
+                two_layer_bridge.geo_simulator.military_events.append(MilitaryEvent(
+                    name='美军海湾增兵',
+                    actors=['usa', 'iran'],
+                    event_type='DEPLOYMENT',
+                    description='美国向波斯湾增派航母战斗群',
+                    tension_increase=15
+                ))
+                two_layer_bridge.geo_simulator.global_tension = min(100, 100)
+                log_info(f"双层桥接器已初始化 (初始紧张度: {two_layer_bridge.geo_simulator.global_tension})")
+            else:
+                two_layer_bridge = None
+        except Exception as e:
+            log_info(f"双层桥接器初始化失败: {e}")
+            two_layer_bridge = None
+        
+        # 初始化地缘政治持久化层
+        try:
+            from app.services.geopolitical_persistence import GeopoliticalPersistenceMiddleware
+            geo_persist = GeopoliticalPersistenceMiddleware(simulation_dir)
+            sim_id = config.get('simulation_id', 'twitter_sim')
+            geo_persist.start_session(sim_id, config, 100.0)
+            log_info(f"地缘政治持久化层已初始化")
+        except Exception as e:
+            log_info(f"持久化层初始化失败: {e}")
+            geo_persist = None
+    
     if action_logger:
         action_logger.log_simulation_start(config)
     
@@ -1211,6 +1330,42 @@ async def run_twitter_simulation(
         action_logger.log_round_end(0, initial_action_count)
     
     # 主模拟循环
+    # 初始化双层桥接器（地缘政治 + 社交媒体）
+    two_layer_bridge = None
+    geo_persist = None
+    try:
+        from app.services.two_layer_bridge import TwoLayerBridge
+        two_layer_bridge = TwoLayerBridge(simulation_dir, config)
+        if two_layer_bridge.geo_simulator:
+            two_layer_bridge.geo_simulator.global_tension = 85.0
+            from app.services.three_layer_simulator import MilitaryEvent
+            two_layer_bridge.geo_simulator.military_events.append(MilitaryEvent(
+                name='美军海湾增兵',
+                actors=['usa', 'iran'],
+                event_type='DEPLOYMENT',
+                description='美国向波斯湾增派航母战斗群',
+                tension_increase=15
+            ))
+            two_layer_bridge.geo_simulator.global_tension = min(100, 100)
+            log_info(f"双层桥接器已初始化 (初始紧张度: {two_layer_bridge.geo_simulator.global_tension})")
+        else:
+            two_layer_bridge = None
+    except Exception as e:
+        log_info(f"双层桥接器初始化失败: {e}")
+        two_layer_bridge = None
+    
+    # 初始化地缘政治持久化层
+    try:
+        from app.services.geopolitical_persistence import GeopoliticalPersistenceMiddleware
+        geo_persist = GeopoliticalPersistenceMiddleware(simulation_dir)
+        # 从config获取simulation_id
+        sim_id = config.get('simulation_id', 'reddit_sim')
+        geo_persist.start_session(sim_id, config, 100.0)
+        log_info(f"地缘政治持久化层已初始化")
+    except Exception as e:
+        log_info(f"持久化层初始化失败: {e}")
+        geo_persist = None
+    
     time_config = config.get("time_config", {})
     total_hours = time_config.get("total_simulation_hours", 72)
     minutes_per_round = time_config.get("minutes_per_round", 30)
@@ -1240,6 +1395,56 @@ async def run_twitter_simulation(
             result.env, config, simulated_hour, round_num
         )
         
+        # 双层桥接器 - 注入增强上下文到Agent prompts（双向反馈核心）
+        if two_layer_bridge and two_layer_bridge.geo_simulator and active_agents:
+            try:
+                for agent_id, agent in active_agents:
+                    agent_id_str = str(agent_id)
+                    
+                    # 获取增强上下文
+                    enriched_prompt = two_layer_bridge.build_enriched_prompt(
+                        agent_id=agent_id_str,
+                        agent_name=agent_names.get(agent_id, f"Agent_{agent_id}")
+                    )
+                    
+                    if enriched_prompt and hasattr(agent, 'system_message') and hasattr(agent.system_message, 'content'):
+                        # 在每轮开始前注入最新地缘政治上下文
+                        original_content = agent.system_message.content
+                        
+                        # 如果之前已经注入过，先移除旧内容
+                        if "【当前局势更新】" in original_content:
+                            parts = original_content.split("【当前局势更新】")
+                            if len(parts) > 0:
+                                original_content = parts[0].strip()
+                        
+                        # 构建新内容
+                        if "# RESPONSE FORMAT" in original_content:
+                            format_parts = original_content.split("# RESPONSE FORMAT")
+                            new_content = format_parts[0] + "\n\n【当前局势更新】\n" + enriched_prompt + "\n\n# RESPONSE FORMAT" + format_parts[1]
+                        else:
+                            new_content = original_content + "\n\n【当前局势更新】\n" + enriched_prompt + "\n\n"
+                        
+                        agent.system_message.content = new_content
+                        
+            except Exception as e:
+                pass
+        
+        # 增强模拟轮次前处理
+        enhanced_round_context = None
+        if enhanced_integrator:
+            try:
+                all_posts = fetch_all_posts_from_db(db_path, "twitter")
+                enhanced_round_context = enhanced_integrator.pre_round_processing(
+                    round_num=round_num + 1,
+                    agent_configs=agent_configs,
+                    all_posts=all_posts
+                )
+                if enhanced_round_context.active_events:
+                    for event in enhanced_round_context.active_events:
+                        log_info(f"【事件】{event.description}")
+            except Exception as e:
+                pass
+
         # 无论是否有活跃agent，都记录round开始
         if action_logger:
             action_logger.log_round_start(round_num + 1, simulated_hour)
@@ -1273,6 +1478,68 @@ async def run_twitter_simulation(
         
         if action_logger:
             action_logger.log_round_end(round_num + 1, round_action_count)
+
+        # 增强模拟动作记录
+        if enhanced_integrator and enhanced_round_context:
+            try:
+                for action_data in actual_actions:
+                    agent_id = str(action_data.get("agent_id", ""))
+                    action_args = action_data.get("action_args", {})
+                    inferred_type = classify_action_type(action_args.get("content", ""))
+                    enhanced_integrator.record_action(
+                        agent_id=agent_id,
+                        action_type=inferred_type,
+                        action_args=action_args,
+                        round_context=enhanced_round_context
+                    )
+            except Exception as e:
+                pass
+        
+        # 双层桥接器 - 地缘政治层模拟（增强版）
+        if two_layer_bridge and two_layer_bridge.geo_simulator:
+            try:
+                # 处理社交媒体动作对地缘政治的反馈
+                round_actions = [{
+                    "agent_id": action_data.get("agent_id", ""),
+                    "agent_name": action_data.get("agent_name", ""),
+                    "action_type": action_data.get("action_type", ""),
+                    "action_args": action_data.get("action_args", {})
+                } for action_data in actual_actions]
+                
+                if round_actions:
+                    feedback = two_layer_bridge.process_social_media_round(round_actions)
+                    if feedback.get('un_resolutions'):
+                        for res in feedback['un_resolutions']:
+                            log_info(f"【UN决议】{res.get('type', '未知')}: {res.get('description', '')} {'通过' if res.get('passed') else '未通过'}")
+                    
+                    if feedback.get('media_posts_count', 0) > 0:
+                        log_info(f"【舆论反馈】处理了{feedback['media_posts_count']}条社交媒体帖子")
+                
+                # 地缘政治模拟轮次
+                geo_result = two_layer_bridge.simulate_round()
+                if geo_result.get('war_events'):
+                    for event in geo_result['war_events']:
+                        log_info(f"【战争事件】{event.get('description', '未知冲突')}")
+                if geo_result.get('diplomatic_events'):
+                    for event in geo_result['diplomatic_events'][:1]:
+                        log_info(f"【外交动态】{event.get('type', '未知')}: {event.get('description', '')}")
+                
+                # 保存到持久化层
+                if geo_persist:
+                    try:
+                        round_data = {
+                            'countries': {},
+                            'diplomatic_events': geo_result.get('diplomatic_events', []),
+                            'war_events': geo_result.get('war_events', []),
+                            'un_resolutions': geo_result.get('un_resolutions', []),
+                            'social_media_actions': actual_actions
+                        }
+                        geo_persist.save_round_data(round_num + 1, round_data)
+                    except Exception as e:
+                        pass
+                        
+            except Exception as e:
+                pass
         
         if (round_num + 1) % 20 == 0:
             progress = (round_num + 1) / total_rounds * 100
@@ -1285,7 +1552,26 @@ async def run_twitter_simulation(
     
     result.total_actions = total_actions
     elapsed = (datetime.now() - start_time).total_seconds()
+    # 增强模拟轮次后处理
+    if enhanced_integrator and enhanced_round_context:
+        try:
+            enhanced_integrator.post_round_processing(enhanced_round_context)
+        except Exception as e:
+            pass
+
     log_info(f"模拟循环完成! 耗时: {elapsed:.1f}秒, 总动作: {total_actions}")
+    
+    # 结束持久化会话
+    if geo_persist:
+        try:
+            final_summary = two_layer_bridge.get_summary() if two_layer_bridge and two_layer_bridge.geo_simulator else {}
+            geo_persist.end_session(
+                final_tension=final_summary.get('global_tension'),
+                total_rounds=total_rounds,
+                status='completed'
+            )
+        except Exception as e:
+            pass
     
     return result
 
@@ -1353,6 +1639,46 @@ async def run_reddit_simulation(
     await result.env.reset()
     log_info("环境已启动")
     
+    # 增强模拟模块初始化
+    enhanced_integrator = None
+    enhanced_integrator_reddit = None
+    if ENHANCED_MODE:
+        try:
+            import csv
+            reddit_profiles_path = os.path.join(simulation_dir, "reddit_profiles.csv")
+            agent_configs_reddit = []
+            if os.path.exists(reddit_profiles_path):
+                with open(reddit_profiles_path, "r", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    for i, row in enumerate(reader):
+                        agent_configs_reddit.append({
+                            "agent_id": str(row.get("user_id", i)),
+                            "name": row.get("name", f"Agent_{i}"),
+                            "platform": "reddit"
+                        })
+            
+            if agent_configs_reddit:
+                enhanced_config = {
+                    "initial_tension": 40.0,
+                    "event_injector": {
+                        "base_probability": 0.05,
+                        "min_rounds_between_events": 3
+                    },
+                    "cross_agent": {
+                        "min_comments_per_round": 1,
+                        "max_posts_in_feed": 10
+                    }
+                }
+                enhanced_integrator_reddit = EnhancedSimulationIntegrator(
+                    simulation_dir,
+                    enhanced_config
+                )
+                enhanced_integrator_reddit.initialize(agent_configs_reddit)
+                log_info("增强模拟模块已初始化 (Reddit)")
+        except Exception as e:
+            log_info(f"增强模拟初始化失败: {e}")
+            enhanced_integrator_reddit = None
+    
     if action_logger:
         action_logger.log_simulation_start(config)
     
@@ -1410,6 +1736,42 @@ async def run_reddit_simulation(
         action_logger.log_round_end(0, initial_action_count)
     
     # 主模拟循环
+    # 初始化双层桥接器（地缘政治 + 社交媒体）
+    two_layer_bridge = None
+    geo_persist = None
+    try:
+        from app.services.two_layer_bridge import TwoLayerBridge
+        two_layer_bridge = TwoLayerBridge(simulation_dir, config)
+        if two_layer_bridge.geo_simulator:
+            two_layer_bridge.geo_simulator.global_tension = 85.0
+            from app.services.three_layer_simulator import MilitaryEvent
+            two_layer_bridge.geo_simulator.military_events.append(MilitaryEvent(
+                name='美军海湾增兵',
+                actors=['usa', 'iran'],
+                event_type='DEPLOYMENT',
+                description='美国向波斯湾增派航母战斗群',
+                tension_increase=15
+            ))
+            two_layer_bridge.geo_simulator.global_tension = min(100, 100)
+            log_info(f"双层桥接器已初始化 (初始紧张度: {two_layer_bridge.geo_simulator.global_tension})")
+        else:
+            two_layer_bridge = None
+    except Exception as e:
+        log_info(f"双层桥接器初始化失败: {e}")
+        two_layer_bridge = None
+    
+    # 初始化地缘政治持久化层
+    try:
+        from app.services.geopolitical_persistence import GeopoliticalPersistenceMiddleware
+        geo_persist = GeopoliticalPersistenceMiddleware(simulation_dir)
+        # 从config获取simulation_id
+        sim_id = config.get('simulation_id', 'reddit_sim')
+        geo_persist.start_session(sim_id, config, 100.0)
+        log_info(f"地缘政治持久化层已初始化")
+    except Exception as e:
+        log_info(f"持久化层初始化失败: {e}")
+        geo_persist = None
+    
     time_config = config.get("time_config", {})
     total_hours = time_config.get("total_simulation_hours", 72)
     minutes_per_round = time_config.get("minutes_per_round", 30)
@@ -1439,6 +1801,56 @@ async def run_reddit_simulation(
             result.env, config, simulated_hour, round_num
         )
         
+        # 双层桥接器 - 注入增强上下文到Agent prompts（双向反馈核心）
+        if two_layer_bridge and two_layer_bridge.geo_simulator and active_agents:
+            try:
+                for agent_id, agent in active_agents:
+                    agent_id_str = str(agent_id)
+                    
+                    # 获取增强上下文
+                    enriched_prompt = two_layer_bridge.build_enriched_prompt(
+                        agent_id=agent_id_str,
+                        agent_name=agent_names.get(agent_id, f"Agent_{agent_id}")
+                    )
+                    
+                    if enriched_prompt and hasattr(agent, 'system_message') and hasattr(agent.system_message, 'content'):
+                        # 在每轮开始前注入最新地缘政治上下文
+                        original_content = agent.system_message.content
+                        
+                        # 如果之前已经注入过，先移除旧内容
+                        if "【当前局势更新】" in original_content:
+                            parts = original_content.split("【当前局势更新】")
+                            if len(parts) > 0:
+                                original_content = parts[0].strip()
+                        
+                        # 构建新内容
+                        if "# RESPONSE FORMAT" in original_content:
+                            format_parts = original_content.split("# RESPONSE FORMAT")
+                            new_content = format_parts[0] + "\n\n【当前局势更新】\n" + enriched_prompt + "\n\n# RESPONSE FORMAT" + format_parts[1]
+                        else:
+                            new_content = original_content + "\n\n【当前局势更新】\n" + enriched_prompt + "\n\n"
+                        
+                        agent.system_message.content = new_content
+                        
+            except Exception as e:
+                pass
+        
+        # 增强模拟轮次前处理
+        enhanced_round_context_reddit = None
+        if enhanced_integrator_reddit:
+            try:
+                all_posts = fetch_all_posts_from_db(db_path, "reddit")
+                enhanced_round_context_reddit = enhanced_integrator_reddit.pre_round_processing(
+                    round_num=round_num + 1,
+                    agent_configs=agent_configs_reddit,
+                    all_posts=all_posts
+                )
+                if enhanced_round_context_reddit.active_events:
+                    for event in enhanced_round_context_reddit.active_events:
+                        log_info(f"【Reddit事件】{event.description}")
+            except Exception as e:
+                pass
+
         # 无论是否有活跃agent，都记录round开始
         if action_logger:
             action_logger.log_round_start(round_num + 1, simulated_hour)
@@ -1472,6 +1884,22 @@ async def run_reddit_simulation(
         
         if action_logger:
             action_logger.log_round_end(round_num + 1, round_action_count)
+
+        # 增强模拟动作记录
+        if enhanced_integrator_reddit and enhanced_round_context_reddit:
+            try:
+                for action_data in actual_actions:
+                    agent_id = str(action_data.get("agent_id", ""))
+                    action_args = action_data.get("action_args", {})
+                    inferred_type = classify_action_type(action_args.get("content", ""))
+                    enhanced_integrator_reddit.record_action(
+                        agent_id=agent_id,
+                        action_type=inferred_type,
+                        action_args=action_args,
+                        round_context=enhanced_round_context_reddit
+                    )
+            except Exception as e:
+                pass
         
         if (round_num + 1) % 20 == 0:
             progress = (round_num + 1) / total_rounds * 100
@@ -1484,6 +1912,13 @@ async def run_reddit_simulation(
     
     result.total_actions = total_actions
     elapsed = (datetime.now() - start_time).total_seconds()
+    # 增强模拟轮次后处理
+    if enhanced_integrator_reddit and enhanced_round_context_reddit:
+        try:
+            enhanced_integrator_reddit.post_round_processing(enhanced_round_context_reddit)
+        except Exception as e:
+            pass
+
     log_info(f"模拟循环完成! 耗时: {elapsed:.1f}秒, 总动作: {total_actions}")
     
     return result

@@ -88,6 +88,28 @@
             </div>
           </div>
         </div>
+        
+        <!-- 地缘政治监控 -->
+        <div class="platform-status geopolitical" @click="openGeopoliticalDashboard">
+          <div class="platform-header">
+            <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span class="platform-name">🌍 地缘政治</span>
+          </div>
+          <div class="platform-stats">
+            <span class="stat">
+              <span class="stat-label">TENSION</span>
+              <span class="stat-value mono">{{ geoTension || 0 }}<span class="stat-total">/100</span></span>
+            </span>
+            <span class="stat">
+              <span class="stat-label">EVENTS</span>
+              <span class="stat-value mono">{{ geoEvents || 0 }}</span>
+            </span>
+          </div>
+        </div>
       </div>
 
       <div class="action-controls">
@@ -465,9 +487,15 @@ const handleStopSimulation = async () => {
 // 轮询状态
 let statusTimer = null
 let detailTimer = null
+let geoTimer = null
+
+const geoTension = ref(0)
+const geoEvents = ref(0)
 
 const startStatusPolling = () => {
   statusTimer = setInterval(fetchRunStatus, 2000)
+  // 启动地缘政治数据轮询
+  geoTimer = setInterval(fetchGeoStatus, 5000)
 }
 
 const startDetailPolling = () => {
@@ -483,11 +511,39 @@ const stopPolling = () => {
     clearInterval(detailTimer)
     detailTimer = null
   }
+  if (geoTimer) {
+    clearInterval(geoTimer)
+    geoTimer = null
+  }
 }
 
 // 追踪各平台的上一次轮次，用于检测变化并输出日志
 const prevTwitterRound = ref(0)
 const prevRedditRound = ref(0)
+
+// 打开地缘政治监控面板
+const openGeopoliticalDashboard = () => {
+  if (props.simulationId) {
+    window.open(`/geopolitical/${props.simulationId}`, '_blank')
+  }
+}
+
+// 获取地缘政治状态
+const fetchGeoStatus = async () => {
+  if (!props.simulationId) return
+  try {
+    const res = await fetch(`/api/simulation/${props.simulationId}/geopolitical/summary`)
+    if (res.ok) {
+      const data = await res.json()
+      if (data.success && data.data) {
+        geoTension.value = data.data.final_tension || data.data.initial_tension || 0
+        geoEvents.value = (data.data.war_events_count || 0) + (data.data.un_resolutions_count || 0)
+      }
+    }
+  } catch (e) {
+    // ignore
+  }
+}
 
 const fetchRunStatus = async () => {
   if (!props.simulationId) return
@@ -832,6 +888,17 @@ onUnmounted(() => {
 
 .platform-status.twitter .platform-icon { color: #000; }
 .platform-status.reddit .platform-icon { color: #000; }
+.platform-status.geopolitical { 
+  cursor: pointer;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #764ba2;
+}
+.platform-status.geopolitical:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+.platform-status.geopolitical .platform-icon { color: white; }
 
 .platform-stats {
   display: flex;

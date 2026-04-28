@@ -9,6 +9,7 @@ from flask import request, jsonify, send_file
 
 from . import simulation_bp
 from ..config import Config
+from ..services.neo4j_adapter import get_neo4j_adapter
 from ..services.zep_entity_reader import ZepEntityReader
 from ..services.oasis_profile_generator import OasisProfileGenerator
 from ..services.simulation_manager import SimulationManager, SimulationStatus
@@ -472,17 +473,26 @@ def prepare_simulation():
         # 这样前端在调用prepare后立即就能获取到预期Agent总数
         try:
             logger.info(f"同步获取实体数量: graph_id={state.graph_id}")
-            reader = ZepEntityReader()
-            # 快速读取实体（不需要边信息，只统计数量）
-            filtered_preview = reader.filter_defined_entities(
-                graph_id=state.graph_id,
-                defined_entity_types=entity_types_list,
-                enrich_with_edges=False  # 不获取边信息，加快速度
-            )
-            # 保存实体数量到状态（供前端立即获取）
-            state.entities_count = filtered_preview.filtered_count
-            state.entity_types = list(filtered_preview.entity_types)
-            logger.info(f"预期实体数量: {filtered_preview.filtered_count}, 类型: {filtered_preview.entity_types}")
+            
+            # 检查是否使用 Neo4j
+            neo4j_adapter = get_neo4j_adapter()
+            if neo4j_adapter.is_connected():
+                # Neo4j 模式
+                neo4j_result = neo4j_adapter.get_entities(entity_types_list)
+                state.entities_count = neo4j_result["filtered_count"]
+                state.entity_types = list(neo4j_result["entity_types"])
+                logger.info(f"Neo4j 实体数量: {neo4j_result['filtered_count']}, 类型: {neo4j_result['entity_types']}")
+            else:
+                # Zep 模式
+                reader = ZepEntityReader()
+                filtered_preview = reader.filter_defined_entities(
+                    graph_id=state.graph_id,
+                    defined_entity_types=entity_types_list,
+                    enrich_with_edges=False
+                )
+                state.entities_count = filtered_preview.filtered_count
+                state.entity_types = list(filtered_preview.entity_types)
+                logger.info(f"Zep 实体数量: {filtered_preview.filtered_count}, 类型: {filtered_preview.entity_types}")
         except Exception as e:
             logger.warning(f"同步获取实体数量失败（将在后台任务中重试）: {e}")
             # 失败不影响后续流程，后台任务会重新获取
@@ -2713,4 +2723,181 @@ def close_simulation_env():
             "success": False,
             "error": str(e),
             "traceback": traceback.format_exc()
+        }), 500
+
+
+# ============== 地缘政治持久化 API ==============
+
+@simulation_bp.route('/<simulation_id>/geopolitical/summary', methods=['GET'])
+def get_geopolitical_summary(simulation_id: str):
+    """
+    获取地缘政治模拟摘要
+    
+    Returns:
+        全局紧张度、事件统计、国家状态
+    """
+    try:
+        from ..services.geopolitical_persistence import GeopoliticalDB
+        
+        sim_dir = os.path.join(
+            Config.UPLOAD_FOLDER, 
+            'simulations', 
+            simulation_id
+        )
+        db_path = os.path.join(sim_dir, 'geopolitical.db')
+        
+        if not os.path.exists(db_path):
+            return jsonify({
+                "success": False,
+                "error": "Geopolitical data not found"
+            }), 404
+        
+        db = GeopoliticalDB(db_path)
+        summary = db.get_session_summary(simulation_id)
+        
+        if not summary:
+            return jsonify({
+                "success": False,
+                "error": "Session not found"
+            }), 404
+        
+        return jsonify({
+            "success": True,
+            "data": summary
+        })
+        
+    except Exception as e:
+        logger.error(f"获取地缘政治摘要失败: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/geopolitical/timeline', methods=['GET'])
+def get_geopolitical_timeline(simulation_id: str):
+    """
+    获取地缘政治事件时间线
+    
+    Query参数：
+        type: 事件类型过滤 (diplomatic/war/un/all)
+    """
+    try:
+        from ..services.geopolitical_persistence import GeopoliticalDB
+        
+        sim_dir = os.path.join(
+            Config.UPLOAD_FOLDER, 
+            'simulations', 
+            simulation_id
+        )
+        db_path = os.path.join(sim_dir, 'geopolitical.db')
+        
+        if not os.path.exists(db_path):
+            return jsonify({
+                "success": False,
+                "error": "Geopolitical data not found"
+            }), 404
+        
+        db = GeopoliticalDB(db_path)
+        # 使用Middleware获取时间线
+        from ..services.geopolitical_persistence import GeopoliticalPersistenceMiddleware
+        persist = GeopoliticalPersistenceMiddleware(sim_dir)
+        persist.db = db
+        persist.current_session_id = simulation_id
+        events = persist.get_timeline(simulation_id)
+        
+        # 过滤
+        event_type = request.args.get('type', 'all')
+        if event_type != 'all':
+            events = [e for e in events if e['type'] == event_type]
+        
+        return jsonify({
+            "success": True,
+            "data": events
+        })
+        
+    except Exception as e:
+        logger.error(f"获取地缘政治时间线失败: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/geopolitical/countries', methods=['GET'])
+def get_geopolitical_countries(simulation_id: str):
+    """
+    获取各国最新状态
+    
+    Query参数：
+        round: 指定轮次（默认最新）
+    """
+    try:
+        from ..services.geopolitical_persistence import GeopoliticalDB
+        
+        sim_dir = os.path.join(
+            Config.UPLOAD_FOLDER, 
+            'simulations', 
+            simulation_id
+        )
+        db_path = os.path.join(sim_dir, 'geopolitical.db')
+        
+        if not os.path.exists(db_path):
+            return jsonify({
+                "success": False,
+                "error": "Geopolitical data not found"
+            }), 404
+        
+        db = GeopoliticalDB(db_path)
+        conn = db.db_path.replace('geopolitical.db', 'geopolitical.db')
+        
+        import sqlite3
+        conn2 = sqlite3.connect(db_path)
+        cursor = conn2.cursor()
+        
+        round_num = request.args.get('round', type=int)
+        
+        if round_num:
+            where_clause = "WHERE session_id = ? AND round = ?"
+            params = [simulation_id, round_num]
+        else:
+            # 获取最新轮次
+            where_clause = "WHERE session_id = ? AND round = (SELECT MAX(round) FROM country_states WHERE session_id = ?)"
+            params = [simulation_id, simulation_id]
+        
+        cursor.execute(f'''
+            SELECT country_id, name, military_posture, war_intensity,
+                   casualties, public_support, international_pressure,
+                   dominant_faction, government_stability
+            FROM country_states
+            {where_clause}
+        ''', params)
+        
+        rows = cursor.fetchall()
+        conn2.close()
+        
+        countries = {}
+        for row in rows:
+            countries[row[0]] = {
+                'country_id': row[0],
+                'name': row[1],
+                'military_posture': row[2],
+                'war_intensity': row[3],
+                'casualties': row[4],
+                'public_support': row[5],
+                'international_pressure': row[6],
+                'dominant_faction': row[7],
+                'government_stability': row[8]
+            }
+        
+        return jsonify({
+            "success": True,
+            "data": countries
+        })
+        
+    except Exception as e:
+        logger.error(f"获取国家状态失败: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
         }), 500

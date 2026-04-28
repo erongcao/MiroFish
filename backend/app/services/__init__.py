@@ -37,6 +37,18 @@ from .simulation_ipc import (
     CommandStatus
 )
 
+from .enhanced_simulation import (
+    EnhancedSimulationIntegrator,
+    ENHANCED_MODE,
+    classify_action_type,
+    RoundContext,
+    GameEvent,
+    EventType,
+    RelationshipState,
+    AgentStatus,
+    ActionType
+)
+
 __all__ = [
     'OntologyGenerator', 
     'GraphBuilderService', 
@@ -69,5 +81,14 @@ __all__ = [
     'IPCResponse',
     'CommandType',
     'CommandStatus',
+    'EnhancedSimulationIntegrator',
+    'ENHANCED_MODE',
+    'classify_action_type',
+    'RoundContext',
+    'GameEvent',
+    'EventType',
+    'RelationshipState',
+    'AgentStatus',
+    'ActionType',
 ]
 
