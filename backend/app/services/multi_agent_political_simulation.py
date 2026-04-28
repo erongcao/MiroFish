@@ -600,7 +600,7 @@ class MultiAgentPoliticalSimulation:
         }
     
     def _update_agent_states(self, payoff_results: Dict):
-        """更新Agent状态 - 修复资源消耗"""
+        """更新Agent状态 - 经济资源系统"""
         for key, result in payoff_results.items():
             agent_a_id, agent_b_id = key.split("|")
             agent_a = self.agents[agent_a_id]
@@ -610,21 +610,23 @@ class MultiAgentPoliticalSimulation:
             action_a = result.get("action_a", DiplomaticAction.COOPERATE)
             action_b = result.get("action_b", DiplomaticAction.COOPERATE)
             
-            # 资源消耗（根据行动类型，有下限保护）
+            # 1. 资源消耗（根据行动类型）
             cost_a = self._calculate_resource_cost(action_a, agent_a)
             cost_b = self._calculate_resource_cost(action_b, agent_b)
             
-            # 应用消耗，但不低于10（防止破产）
-            agent_a.resources = max(10.0, agent_a.resources - cost_a)
-            agent_b.resources = max(10.0, agent_b.resources - cost_b)
+            # 2. 资源生成（经济实力）
+            income_a = self._calculate_resource_income(agent_a)
+            income_b = self._calculate_resource_income(agent_b)
             
-            # 资源恢复（如果采取合作/谈判，小幅恢复）
-            if action_a in [DiplomaticAction.COOPERATE, DiplomaticAction.NEGOTIATE]:
-                agent_a.resources = min(100.0, agent_a.resources + 2.0)
-            if action_b in [DiplomaticAction.COOPERATE, DiplomaticAction.NEGOTIATE]:
-                agent_b.resources = min(100.0, agent_b.resources + 2.0)
+            # 3. 净资源变化
+            net_change_a = income_a - cost_a
+            net_change_b = income_b - cost_b
             
-            # 战争疲劳（只在升级/冲突时增加）
+            # 应用变化（考虑经济弹性）
+            agent_a.resources = max(10.0, min(200.0, agent_a.resources + net_change_a))
+            agent_b.resources = max(10.0, min(200.0, agent_b.resources + net_change_b))
+            
+            # 4. 战争疲劳（只在升级/冲突时增加）
             if action_a in [DiplomaticAction.ESCALATE, DiplomaticAction.DETER]:
                 agent_a.war_exhaustion = min(1.0, agent_a.war_exhaustion + 0.15)
             elif action_a in [DiplomaticAction.COOPERATE, DiplomaticAction.NEGOTIATE]:
@@ -634,6 +636,59 @@ class MultiAgentPoliticalSimulation:
                 agent_b.war_exhaustion = min(1.0, agent_b.war_exhaustion + 0.15)
             elif action_b in [DiplomaticAction.COOPERATE, DiplomaticAction.NEGOTIATE]:
                 agent_b.war_exhaustion = max(0.0, agent_b.war_exhaustion - 0.05)
+    
+    def _calculate_resource_income(self, agent: Agent) -> float:
+        """计算资源生成（经济实力）"""
+        # 基础经济产出（根据国家和类型）- 平衡版
+        base_income = {
+            # 美国 - 高GDP
+            "usa": 4.0,
+            "china": 3.0,
+            "russia": 2.0,
+            "eu": 3.5,
+            # 资源型国家
+            "saudi": 3.0,  # 石油收入
+            "iran": 1.5,   # 石油但受制裁
+            # 发达经济体
+            "japan": 2.5,
+            "uk": 2.0,
+            "germany": 2.5,
+            "france": 2.0,
+            # 新兴经济体
+            "india": 2.0,
+            "south_korea": 2.0,
+            # 其他国家
+            "israel": 1.5,
+            "turkey": 1.5,
+            "north_korea": 0.5,  # 经济薄弱
+            "brazil": 1.5,
+        }
+        
+        income = base_income.get(agent.country, 1.5)
+        
+        # 势力类型加成（降低）
+        type_bonus = {
+            "financial": 1.0,      # 金融集团赚钱能力强
+            "energy": 0.8,         # 能源集团有资源收入
+            "tech": 0.8,           # 科技集团创新收入
+            "military": -0.5,      # 军事集团消耗大
+            "government": 0.3,     # 政府有税收
+        }
+        income += type_bonus.get(agent.force_type, 0)
+        
+        # 战争疲劳减少经济产出（经济受战争影响）
+        fatigue_penalty = agent.war_exhaustion * 2.0
+        income -= fatigue_penalty
+        
+        # 资源枯竭惩罚（资源低于30时，经济受损）
+        if agent.resources < 30:
+            income -= (30 - agent.resources) * 0.1
+        
+        # 资源充裕奖励（资源高于150时，经济繁荣）
+        if agent.resources > 150:
+            income += 0.5
+        
+        return max(0.2, income)  # 最小收入保障
     
     def _calculate_resource_cost(self, action: DiplomaticAction, agent: Agent) -> float:
         """计算资源消耗 - 修复版"""
