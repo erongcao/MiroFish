@@ -75,9 +75,9 @@ class MediationAttempt:
         return {
             "attempt_id": self.attempt_id,
             "mediator": self.mediator,
-            "mediator_type": self.mediator_type.value,
+            "mediator_type": self.mediator_type.value if hasattr(self.mediator_type, 'value') else self.mediator_type,
             "parties": list(self.parties),
-            "outcome": self.outcome.value,
+            "outcome": self.outcome.value if hasattr(self.outcome, 'value') else self.outcome,
             "trust_restored": self.trust_restored,
             "deescalation": self.deescalation,
         }

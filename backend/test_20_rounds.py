@@ -15,11 +15,14 @@ from diplomacy_integration import DiplomacyIntegration
 # 配置5个国家
 AGENT_CONFIGS = [
     {'agent_id': 'usa', 'name': '美国', 'stance': 'opposing', 'sentiment_bias': -0.3, 
-     'political_system': 'democracy', 'nuclear_warheads': 5800, 'initial_approval': 0.55},
+     'political_system': 'democracy', 'nuclear_warheads': 5800, 'initial_approval': 0.55,
+     'nuclear_second_strike': True, 'nuclear_delivery': 50},
     {'agent_id': 'china', 'name': '中国', 'stance': 'neutral', 'sentiment_bias': 0.0,
-     'political_system': 'autocracy', 'nuclear_warheads': 350, 'no_first_use': True, 'initial_approval': 0.70},
+     'political_system': 'autocracy', 'nuclear_warheads': 350, 'no_first_use': True, 
+     'initial_approval': 0.70, 'nuclear_second_strike': True, 'nuclear_delivery': 10},
     {'agent_id': 'russia', 'name': '俄罗斯', 'stance': 'opposing', 'sentiment_bias': 0.3,
-     'political_system': 'hybrid', 'nuclear_warheads': 6500, 'initial_approval': 0.45},
+     'political_system': 'hybrid', 'nuclear_warheads': 6500, 'initial_approval': 0.45,
+     'nuclear_second_strike': True, 'nuclear_delivery': 55},
     {'agent_id': 'eu', 'name': '欧盟', 'stance': 'neutral', 'sentiment_bias': 0.0,
      'political_system': 'democracy', 'nuclear_warheads': 0, 'initial_approval': 0.50},
     {'agent_id': 'iran', 'name': '伊朗', 'stance': 'opposing', 'sentiment_bias': -0.5,
@@ -107,16 +110,16 @@ def run_simulation(max_rounds=20):
             bias = get_relationship_bias(actor, target)
             
             if bias < -0.4:
-                # 敌对关系：更可能冲突
+                # 敌对关系：更可能冲突但也有合作可能
                 event_type = random.choices(
-                    ['ULTIMATUM', 'SANCTION', 'STATEMENT', 'BREAK'],
-                    weights=[0.3, 0.3, 0.2, 0.2]
+                    ['ULTIMATUM', 'SANCTION', 'STATEMENT', 'BREAK', 'TRADE'],
+                    weights=[0.25, 0.25, 0.2, 0.15, 0.15]
                 )[0]
             elif bias > 0.3:
                 # 友好关系：更可能合作
                 event_type = random.choices(
-                    ['TRADE', 'MEETING', 'CONDITIONS', 'STATEMENT'],
-                    weights=[0.3, 0.3, 0.2, 0.2]
+                    ['TRADE', 'MEETING', 'CONDITIONS', 'STATEMENT', 'WITHDRAW'],
+                    weights=[0.35, 0.3, 0.15, 0.1, 0.1]
                 )[0]
             else:
                 # 中性关系：随机
@@ -190,8 +193,8 @@ def run_simulation(max_rounds=20):
                     })
                     print(f"⚠️ 制裁: {', '.join(imposers)} → {target} ({severity}, 影响: {sanction['economic_impact']:.1%})")
         
-        # 随机尝试调解（如果冲突严重）
-        if random.random() < 0.2 and integration.mediation:
+        # 随机尝试调解（如果冲突严重）- 提高触发概率
+        if random.random() < 0.5 and integration.mediation:
             parties = random.sample(agent_ids, 2)
             mediator = integration.mediation.find_best_mediator(parties, 'crisis', round_num)
             if mediator:

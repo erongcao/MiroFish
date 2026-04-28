@@ -44,11 +44,11 @@ class NuclearArsenal:
         if self.warheads == 0 or target_arsenal.warheads == 0:
             return 0.0
         
-        # 生存能力
-        survivability = 0.3 if self.second_strike_capability else 0.05
+        # 生存能力 - 提高基础值
+        survivability = 0.6 if self.second_strike_capability else 0.15
         
-        # 突破防御概率
-        penetration = max(0.1, 1.0 - target_arsenal.missile_defense)
+        # 突破防御概率 - 提高最低值
+        penetration = max(0.3, 1.0 - target_arsenal.missile_defense)
         
         # 毁灭能力
         destructive_power = min(1.0, self.warheads / 100)

@@ -228,10 +228,21 @@ class GameTheoryDiplomacy:
         state_a.resources -= cost_a
         state_b.resources -= cost_b
         
-        # 10. 战争疲劳
+        # 10. 战争疲劳 - 增加升级冲突的疲劳值
         if action_a == DiplomaticAction.ESCALATE or action_b == DiplomaticAction.ESCALATE:
+            state_a.war_exhaustion += 0.25
+            state_b.war_exhaustion += 0.25
+        elif action_a == DiplomaticAction.DEFECT or action_b == DiplomaticAction.DEFECT:
             state_a.war_exhaustion += 0.1
             state_b.war_exhaustion += 0.1
+        
+        # 战争状态下持续增加疲劳
+        key = f"{min(agent_a, agent_b)}|{max(agent_a, agent_b)}"
+        if self.conflict_levels[key] in [ConflictLevel.PROXY_WAR, 
+                                          ConflictLevel.LIMITED_WAR, 
+                                          ConflictLevel.TOTAL_WAR]:
+            state_a.war_exhaustion += 0.15
+            state_b.war_exhaustion += 0.15
         
         return {
             "success": success,

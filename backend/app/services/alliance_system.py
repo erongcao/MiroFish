@@ -115,7 +115,7 @@ class AllianceSystem:
         self.alliance_counter = 0
         
         # 配置参数
-        self.min_trust_for_alliance = 0.3      # 结盟最低信任度
+        self.min_trust_for_alliance = 0.15      # 结盟最低信任度 (降低以促进同盟形成)
         self.max_alliances_per_agent = 3       # 每个 agent 最多同盟数
         self.cohesion_decay = 0.02             # 每轮凝聚力衰减
         self.betrayal_penalty = -0.5           # 背叛惩罚
@@ -156,7 +156,7 @@ class AllianceSystem:
         
         alliance = Alliance(
             alliance_id=alliance_id,
-            name=f"{type_names.get(alliance_type, '同盟')}-{alliance_counter}",
+            name=f"{type_names.get(alliance_type, '同盟')}-{self.alliance_counter}",
             alliance_type=alliance_type,
             leader=proposer,
             formed_round=round_num,
