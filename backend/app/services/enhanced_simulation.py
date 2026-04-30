@@ -6,6 +6,7 @@ Enhanced Simulation Integration Layer
 import os
 import sys
 import json
+import random
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
 
@@ -234,6 +235,27 @@ class EnhancedSimulationIntegrator:
         # 更新外交系统
         if hasattr(self, 'diplomacy_integration') and self.diplomacy_integration:
             self.diplomacy_integration.advance_round()
+            
+            # 🟡 Bug Fix: 调解触发检查 - 触发概率从20%提高到50%
+            # 每轮检查是否有高冲突对需要调解
+            dip = self.diplomacy_integration
+            if dip.mediation:
+                # 找出冲突级别高或有战争疲劳的国家对
+                for (a_id, b_id), conflict in dip.diplomacy.conflict_levels.items():
+                    if conflict.name in ['crisis', 'sanctions', 'proxy_war', 'limited_war', 'total_war']:
+                        state_a = dip.diplomacy.agents.get(a_id)
+                        state_b = dip.diplomacy.agents.get(b_id)
+                        if state_a and state_b:
+                            # 战争疲劳高或声誉为负时，触发调解概率50%
+                            if state_a.war_exhaustion > 0.2 or state_b.war_exhaustion > 0.2 or state_a.reputation < 0 or state_b.reputation < 0:
+                                if random.random() < 0.5:  # 50%概率
+                                    # 尝试调解
+                                    mediators = ['un', 'eu', 'china']
+                                    for med in mediators:
+                                        result = dip.attempt_mediation(med, [a_id, b_id], dip.diplomacy.round)
+                                        if result and result.get('status') == 'success':
+                                            print(f"[Mediation] {med} 调解 {a_id} vs {b_id} 成功!")
+                                            break
         
         summary = self.world_state.get_state_summary()
         print(f"[EnhancedSim] Round {summary['round']}: "

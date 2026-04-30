@@ -1,217 +1,228 @@
 {
   "total_rounds": 20,
-  "war_events": [
+  "war_events": [],
+  "alliance_events": [
     {
-      "round": 13,
-      "actor": "iran",
-      "target": "china",
-      "event_type": "ULTIMATUM",
-      "war_triggered": true,
-      "conflict_level": "limited_war"
+      "round": 6,
+      "alliance": {
+        "alliance_id": "alliance_1",
+        "name": "\u60c5\u62a5\u540c\u76df-1",
+        "type": "intelligence",
+        "members": [
+          "usa",
+          "eu"
+        ],
+        "leader": "usa",
+        "formed_round": 6,
+        "status": "active",
+        "cohesion": 1.0,
+        "mutual_defense": false,
+        "collective_action": false
+      }
     },
     {
-      "round": 14,
-      "actor": "china",
-      "target": "iran",
-      "event_type": "ULTIMATUM",
-      "war_triggered": true,
-      "conflict_level": "total_war"
-    },
-    {
-      "round": 17,
-      "actor": "china",
-      "target": "iran",
-      "event_type": "BREAK",
-      "war_triggered": true,
-      "conflict_level": "total_war"
-    },
-    {
-      "round": 19,
-      "actor": "usa",
-      "target": "eu",
-      "event_type": "MEETING",
-      "war_triggered": true,
-      "conflict_level": "limited_war"
-    },
-    {
-      "round": 20,
-      "actor": "china",
-      "target": "iran",
-      "event_type": "CONDITIONS",
-      "war_triggered": true,
-      "conflict_level": "total_war"
+      "round": 7,
+      "alliance": {
+        "alliance_id": "alliance_2",
+        "name": "\u60c5\u62a5\u540c\u76df-2",
+        "type": "intelligence",
+        "members": [
+          "russia",
+          "china"
+        ],
+        "leader": "russia",
+        "formed_round": 7,
+        "status": "active",
+        "cohesion": 1.0,
+        "mutual_defense": false,
+        "collective_action": false
+      }
     }
   ],
-  "alliance_events": [],
   "sanction_events": [
+    {
+      "round": 1,
+      "sanction": {
+        "sanction_id": "sanction_1",
+        "target": "iran",
+        "imposers": [
+          "usa"
+        ],
+        "type": "financial",
+        "severity": "LIGHT",
+        "economic_impact": -0.05,
+        "effectiveness": 0.7309468469781727,
+        "duration": 10
+      }
+    },
+    {
+      "round": 2,
+      "sanction": {
+        "sanction_id": "sanction_2",
+        "target": "iran",
+        "imposers": [
+          "usa"
+        ],
+        "type": "financial",
+        "severity": "SEVERE",
+        "economic_impact": -0.2,
+        "effectiveness": 0.8746170424787141,
+        "duration": 10
+      }
+    },
     {
       "round": 3,
       "sanction": {
-        "sanction_id": "sanction_1",
+        "sanction_id": "sanction_3",
+        "target": "iran",
+        "imposers": [
+          "china",
+          "eu"
+        ],
+        "type": "financial",
+        "severity": "LIGHT",
+        "economic_impact": -0.06,
+        "effectiveness": 0.7199804994759923,
+        "duration": 10
+      }
+    },
+    {
+      "round": 5,
+      "sanction": {
+        "sanction_id": "sanction_4",
         "target": "russia",
         "imposers": [
           "china",
           "eu"
         ],
         "type": "trade",
+        "severity": "LIGHT",
+        "economic_impact": -0.06,
+        "effectiveness": 0.6263193220711195,
+        "duration": 10
+      }
+    },
+    {
+      "round": 9,
+      "sanction": {
+        "sanction_id": "sanction_5",
+        "target": "china",
+        "imposers": [
+          "eu"
+        ],
+        "type": "financial",
         "severity": "SEVERE",
-        "economic_impact": -0.24,
-        "effectiveness": 0.6046357073666527,
+        "economic_impact": -0.2,
+        "effectiveness": 0.8997392153219518,
         "duration": 10
       }
     },
     {
       "round": 11,
       "sanction": {
-        "sanction_id": "sanction_2",
-        "target": "china",
+        "sanction_id": "sanction_6",
+        "target": "iran",
         "imposers": [
-          "iran",
-          "eu"
+          "china"
         ],
         "type": "technology",
-        "severity": "LIGHT",
-        "economic_impact": -0.06,
-        "effectiveness": 0.7212426711820321,
+        "severity": "MODERATE",
+        "economic_impact": -0.09877507301909637,
+        "effectiveness": 0.821070447985538,
         "duration": 10
       }
     },
     {
       "round": 13,
       "sanction": {
-        "sanction_id": "sanction_3",
+        "sanction_id": "sanction_7",
         "target": "china",
         "imposers": [
-          "iran",
+          "usa",
           "eu"
         ],
-        "type": "technology",
+        "type": "trade",
         "severity": "SEVERE",
         "economic_impact": -0.24,
-        "effectiveness": 0.9115300971251744,
+        "effectiveness": 0.7106194146751699,
         "duration": 10
       }
     },
     {
       "round": 14,
       "sanction": {
-        "sanction_id": "sanction_4",
-        "target": "eu",
+        "sanction_id": "sanction_8",
+        "target": "russia",
         "imposers": [
-          "russia",
-          "china"
+          "china",
+          "iran"
         ],
-        "type": "financial",
-        "severity": "MODERATE",
-        "economic_impact": -0.12,
-        "effectiveness": 0.9383050787345233,
+        "type": "trade",
+        "severity": "LIGHT",
+        "economic_impact": -0.06,
+        "effectiveness": 0.732544595056047,
         "duration": 10
       }
     },
     {
-      "round": 16,
+      "round": 15,
       "sanction": {
-        "sanction_id": "sanction_5",
-        "target": "china",
+        "sanction_id": "sanction_9",
+        "target": "russia",
         "imposers": [
-          "iran",
-          "usa"
+          "usa",
+          "iran"
         ],
-        "type": "trade",
+        "type": "financial",
         "severity": "MODERATE",
         "economic_impact": -0.12,
-        "effectiveness": 0.9826757472946361,
+        "effectiveness": 0.8839975937111921,
         "duration": 10
       }
     },
     {
       "round": 17,
       "sanction": {
-        "sanction_id": "sanction_6",
-        "target": "russia",
+        "sanction_id": "sanction_10",
+        "target": "usa",
         "imposers": [
-          "china"
+          "russia"
         ],
         "type": "trade",
-        "severity": "LIGHT",
-        "economic_impact": -0.04196413752749853,
-        "effectiveness": 0.6457697602431408,
+        "severity": "SEVERE",
+        "economic_impact": -0.2,
+        "effectiveness": 0.8933623842343117,
         "duration": 10
       }
     },
     {
-      "round": 18,
+      "round": 19,
       "sanction": {
-        "sanction_id": "sanction_7",
-        "target": "russia",
-        "imposers": [
-          "iran"
-        ],
-        "type": "trade",
-        "severity": "MODERATE",
-        "economic_impact": -0.08143652822889336,
-        "effectiveness": 0.6898300642099173,
-        "duration": 10
-      }
-    },
-    {
-      "round": 20,
-      "sanction": {
-        "sanction_id": "sanction_8",
+        "sanction_id": "sanction_11",
         "target": "eu",
         "imposers": [
           "russia"
         ],
-        "type": "financial",
-        "severity": "SEVERE",
-        "economic_impact": -0.19273575892029193,
-        "effectiveness": 0.9711730623413753,
+        "type": "technology",
+        "severity": "MODERATE",
+        "economic_impact": -0.1,
+        "effectiveness": 0.614221536145598,
         "duration": 10
       }
     }
   ],
   "mediation_events": [
     {
-      "round": 7,
+      "round": 5,
       "attempt": {
         "attempt_id": "med_1",
         "mediator": "un",
         "mediator_type": "un",
         "parties": [
-          "iran",
-          "china"
-        ],
-        "outcome": "rejected",
-        "trust_restored": 0.0,
-        "deescalation": 0
-      }
-    },
-    {
-      "round": 9,
-      "attempt": {
-        "attempt_id": "med_2",
-        "mediator": "eu",
-        "mediator_type": "regional",
-        "parties": [
           "china",
-          "usa"
+          "eu"
         ],
-        "outcome": "rejected",
-        "trust_restored": 0.0,
-        "deescalation": 0
-      }
-    },
-    {
-      "round": 13,
-      "attempt": {
-        "attempt_id": "med_3",
-        "mediator": "un",
-        "mediator_type": "un",
-        "parties": [
-          "iran",
-          "china"
-        ],
-        "outcome": "rejected",
+        "outcome": "failed",
         "trust_restored": 0.0,
         "deescalation": 0
       }
@@ -221,81 +232,72 @@
     "status": "active",
     "round": 20,
     "conflict_summary": {
-      "total_agents": 5,
-      "peace_count": 0,
-      "tension_count": 1,
-      "crisis_count": 0,
-      "sanctions_count": 2,
-      "proxy_war_count": 3,
-      "limited_war_count": 2,
-      "total_war_count": 2,
-      "relationships": {
-        "china|usa": "total_war",
-        "russia|usa": "limited_war",
-        "eu|usa": "limited_war",
-        "iran|usa": "proxy_war",
-        "china|russia": "tension",
-        "china|eu": "sanctions",
-        "china|iran": "total_war",
-        "eu|russia": "proxy_war",
-        "iran|russia": "sanctions",
-        "eu|iran": "proxy_war"
-      }
+      "conflict_distribution": {
+        "proxy_war": 4,
+        "tension": 2,
+        "sanctions": 1,
+        "limited_war": 1,
+        "crisis": 2
+      },
+      "total_conflicts": 10,
+      "avg_war_exhaustion": 1.9799999999999998
     },
     "agent_states": {
       "usa": {
-        "reputation": -1.0,
-        "resources": 142.02345168632885,
-        "war_exhaustion": 3.3000000000000007
+        "reputation": -0.6999999999999991,
+        "resources": 96.54069067609774,
+        "war_exhaustion": 2.7000000000000006
       },
       "china": {
-        "reputation": -1.0,
-        "resources": 139.28990250277025,
-        "war_exhaustion": 3.200000000000001
+        "reputation": -0.13000000000000012,
+        "resources": 100.07319383138595,
+        "war_exhaustion": 1.6499999999999992
       },
       "russia": {
-        "reputation": -0.8500000000000001,
-        "resources": 163.6651002529945,
-        "war_exhaustion": 1.0999999999999996
+        "reputation": -0.34999999999999987,
+        "resources": 88.76823345235239,
+        "war_exhaustion": 2.35
       },
       "eu": {
-        "reputation": -1.0,
-        "resources": 168.64521284668535,
-        "war_exhaustion": 1.3999999999999995
+        "reputation": -0.26,
+        "resources": 83.78913038169162,
+        "war_exhaustion": 1.7999999999999996
       },
       "iran": {
-        "reputation": -1.0,
-        "resources": 135.3251574631982,
-        "war_exhaustion": 2.950000000000001
+        "reputation": -0.11000000000000003,
+        "resources": 71.15300375890578,
+        "war_exhaustion": 1.3999999999999997
       }
     },
     "alliances": {
-      "total_alliances": 0,
+      "total_alliances": 2,
       "active": 0,
-      "dissolved": 0,
+      "dissolved": 2,
       "alliances": []
     },
     "sanctions": {
-      "total_sanctions": 8,
-      "active": 7,
+      "total_sanctions": 11,
+      "active": 6,
       "by_type": {
         "trade": 3,
-        "financial": 2,
+        "financial": 1,
         "technology": 2,
         "travel": 0,
         "arms": 0,
         "comprehensive": 0
       },
       "most_sanctioned": [
+        "iran",
         "russia",
         "china",
+        "usa",
         "eu"
       ]
     },
     "mediation": {
-      "total_attempts": 3,
+      "total_attempts": 1,
       "outcomes": {
-        "rejected": 3
+        "failed": 1
       },
       "mediators": 2,
       "success_rate": 0.0
@@ -317,24 +319,24 @@
           "term_remaining": 0,
           "public_opinions": {
             "war": {
-              "support": -0.03882657988417973,
-              "intensity": 0.39578240114674457
+              "support": 0.1262120552081483,
+              "intensity": 0.6529729454536944
             },
             "economy": {
-              "support": -0.03729635264914501,
-              "intensity": 0.6563417171254228
+              "support": 0.06923254052835529,
+              "intensity": 0.5694819214764733
             },
             "diplomacy": {
-              "support": 0.12457099518593877,
-              "intensity": 0.6872765081423033
+              "support": -0.09095196693451411,
+              "intensity": 0.5534315058454633
             },
             "trade": {
-              "support": 0.016884180374409898,
-              "intensity": 0.4927569244370642
+              "support": 0.07906506945670044,
+              "intensity": 0.3859099855585511
             },
             "human_rights": {
-              "support": -0.09732603618295531,
-              "intensity": 0.31168025504927416
+              "support": 0.03308538447615863,
+              "intensity": 0.6633821727785509
             }
           }
         },
@@ -349,24 +351,24 @@
           "term_remaining": 0,
           "public_opinions": {
             "war": {
-              "support": 0.003283791971013521,
-              "intensity": 0.5566567480344449
+              "support": 0.05347201247526807,
+              "intensity": 0.6472356749270476
             },
             "economy": {
-              "support": 0.08932279800718287,
-              "intensity": 0.6156243658154732
+              "support": 0.05625351802986913,
+              "intensity": 0.6947167262421275
             },
             "diplomacy": {
-              "support": -0.11855902940527609,
-              "intensity": 0.698333450323277
+              "support": -0.07889079821839119,
+              "intensity": 0.547534000259781
             },
             "trade": {
-              "support": -0.026287235835282564,
-              "intensity": 0.3292755414391707
+              "support": 0.07558516443307774,
+              "intensity": 0.3104833030915648
             },
             "human_rights": {
-              "support": 0.050024412316891254,
-              "intensity": 0.311038704298562
+              "support": 0.06026531329714693,
+              "intensity": 0.4635039173214315
             }
           }
         },
@@ -381,24 +383,24 @@
           "term_remaining": 0,
           "public_opinions": {
             "war": {
-              "support": 0.10123408658056125,
-              "intensity": 0.37209836578635275
+              "support": -0.07796901473928362,
+              "intensity": 0.5039131334679322
             },
             "economy": {
-              "support": -0.04305284074204588,
-              "intensity": 0.4507494937706644
+              "support": -0.042359095748850925,
+              "intensity": 0.4536938951612762
             },
             "diplomacy": {
-              "support": 0.11232686334421298,
-              "intensity": 0.6555580152133637
+              "support": -0.0447240606756727,
+              "intensity": 0.4541578480755918
             },
             "trade": {
-              "support": -0.09377585459905909,
-              "intensity": 0.6670199040590803
+              "support": -0.11989000417578823,
+              "intensity": 0.6916946514622466
             },
             "human_rights": {
-              "support": -0.0195370676574374,
-              "intensity": 0.5755367859770245
+              "support": 0.040836816880134824,
+              "intensity": 0.43546469328089965
             }
           }
         },
@@ -413,24 +415,24 @@
           "term_remaining": 0,
           "public_opinions": {
             "war": {
-              "support": 0.09645977660616324,
-              "intensity": 0.6575369285047604
+              "support": 0.024355645530810884,
+              "intensity": 0.4971021851083345
             },
             "economy": {
-              "support": 0.004421352073945204,
-              "intensity": 0.31553374292333597
+              "support": 0.0594738394921383,
+              "intensity": 0.4710447367397925
             },
             "diplomacy": {
-              "support": 0.011008913846653213,
-              "intensity": 0.4925989135759218
+              "support": -0.02759686571015356,
+              "intensity": 0.4234235003167596
             },
             "trade": {
-              "support": 0.12776135143906625,
-              "intensity": 0.5073121544854995
+              "support": 0.08704380800783582,
+              "intensity": 0.6678461934028789
             },
             "human_rights": {
-              "support": 0.07995007913892307,
-              "intensity": 0.5682166107919919
+              "support": 0.08787910818573888,
+              "intensity": 0.6978440977932484
             }
           }
         },
@@ -445,24 +447,24 @@
           "term_remaining": 0,
           "public_opinions": {
             "war": {
-              "support": 0.1283118324544286,
-              "intensity": 0.45680039015252505
+              "support": 0.10991774130922108,
+              "intensity": 0.48613117218331836
             },
             "economy": {
-              "support": -0.0554997402127675,
-              "intensity": 0.4983355605851396
+              "support": -0.11867826949386755,
+              "intensity": 0.5193218796726506
             },
             "diplomacy": {
-              "support": -0.09188936312560228,
-              "intensity": 0.43387471860521143
+              "support": -0.0884166287925767,
+              "intensity": 0.36810347075417194
             },
             "trade": {
-              "support": 0.00930909430006432,
-              "intensity": 0.41600340144355996
+              "support": 0.08716701063622175,
+              "intensity": 0.41607165120779666
             },
             "human_rights": {
-              "support": -0.004872357685487657,
-              "intensity": 0.3067292818973921
+              "support": 0.0003040108215379822,
+              "intensity": 0.5504694751547434
             }
           }
         }
@@ -472,167 +474,167 @@
   "event_history": [
     {
       "round": 1,
+      "actor": "china",
+      "target": "usa",
+      "event_type": "WITHDRAW",
+      "war_triggered": false,
+      "conflict_level": "tension"
+    },
+    {
+      "round": 1,
       "actor": "russia",
-      "target": "iran",
-      "event_type": "TRADE",
+      "target": "usa",
+      "event_type": "STATEMENT",
       "war_triggered": false,
       "conflict_level": "peace"
     },
     {
       "round": 1,
-      "actor": "usa",
-      "target": "russia",
-      "event_type": "BREAK",
-      "war_triggered": false,
-      "conflict_level": "tension"
-    },
-    {
-      "round": 1,
-      "actor": "china",
-      "target": "usa",
-      "event_type": "TRADE",
-      "war_triggered": false,
-      "conflict_level": "tension"
-    },
-    {
-      "round": 2,
-      "actor": "china",
+      "actor": "russia",
       "target": "iran",
-      "event_type": "ULTIMATUM",
+      "event_type": "MEETING",
       "war_triggered": false,
       "conflict_level": "tension"
     },
     {
       "round": 2,
       "actor": "iran",
-      "target": "usa",
-      "event_type": "BREAK",
-      "war_triggered": false,
-      "conflict_level": "tension"
-    },
-    {
-      "round": 2,
-      "actor": "china",
       "target": "usa",
       "event_type": "STATEMENT",
       "war_triggered": false,
-      "conflict_level": "crisis"
+      "conflict_level": "peace"
     },
     {
-      "round": 3,
-      "actor": "iran",
-      "target": "china",
-      "event_type": "TRADE",
-      "war_triggered": false,
-      "conflict_level": "crisis"
-    },
-    {
-      "round": 3,
-      "actor": "china",
-      "target": "iran",
+      "round": 2,
+      "actor": "russia",
+      "target": "usa",
       "event_type": "SANCTION",
       "war_triggered": false,
-      "conflict_level": "sanctions"
+      "conflict_level": "tension"
+    },
+    {
+      "round": 2,
+      "actor": "usa",
+      "target": "china",
+      "event_type": "MEETING",
+      "war_triggered": false,
+      "conflict_level": "tension"
     },
     {
       "round": 3,
-      "actor": "russia",
-      "target": "eu",
-      "event_type": "STATEMENT",
-      "war_triggered": false,
-      "conflict_level": "tension"
-    },
-    {
-      "round": 4,
       "actor": "eu",
       "target": "china",
-      "event_type": "STATEMENT",
+      "event_type": "SANCTION",
       "war_triggered": false,
       "conflict_level": "tension"
     },
     {
-      "round": 4,
-      "actor": "china",
-      "target": "usa",
-      "event_type": "CONDITIONS",
-      "war_triggered": false,
-      "conflict_level": "sanctions"
-    },
-    {
-      "round": 4,
-      "actor": "china",
+      "round": 3,
+      "actor": "eu",
       "target": "iran",
       "event_type": "WITHDRAW",
       "war_triggered": false,
-      "conflict_level": "proxy_war"
+      "conflict_level": "peace"
     },
     {
-      "round": 5,
-      "actor": "russia",
+      "round": 4,
+      "actor": "china",
       "target": "iran",
-      "event_type": "TRADE",
+      "event_type": "STATEMENT",
       "war_triggered": false,
       "conflict_level": "tension"
     },
     {
-      "round": 5,
-      "actor": "eu",
-      "target": "iran",
-      "event_type": "CONDITIONS",
+      "round": 4,
+      "actor": "china",
+      "target": "eu",
+      "event_type": "MEETING",
       "war_triggered": false,
-      "conflict_level": "tension"
+      "conflict_level": "crisis"
     },
     {
-      "round": 5,
-      "actor": "eu",
-      "target": "usa",
-      "event_type": "CONDITIONS",
-      "war_triggered": false,
-      "conflict_level": "tension"
-    },
-    {
-      "round": 6,
+      "round": 4,
       "actor": "china",
       "target": "usa",
       "event_type": "BREAK",
       "war_triggered": false,
-      "conflict_level": "proxy_war"
+      "conflict_level": "crisis"
     },
     {
-      "round": 6,
-      "actor": "eu",
+      "round": 5,
+      "actor": "iran",
       "target": "usa",
-      "event_type": "TRADE",
+      "event_type": "SANCTION",
+      "war_triggered": false,
+      "conflict_level": "peace"
+    },
+    {
+      "round": 5,
+      "actor": "usa",
+      "target": "china",
+      "event_type": "SANCTION",
       "war_triggered": false,
       "conflict_level": "crisis"
     },
     {
-      "round": 6,
-      "actor": "eu",
+      "round": 5,
+      "actor": "russia",
       "target": "china",
       "event_type": "TRADE",
       "war_triggered": false,
-      "conflict_level": "crisis"
+      "conflict_level": "tension"
+    },
+    {
+      "round": 6,
+      "actor": "russia",
+      "target": "eu",
+      "event_type": "TRADE",
+      "war_triggered": false,
+      "conflict_level": "tension"
+    },
+    {
+      "round": 6,
+      "actor": "iran",
+      "target": "eu",
+      "event_type": "MEETING",
+      "war_triggered": false,
+      "conflict_level": "tension"
+    },
+    {
+      "round": 6,
+      "actor": "russia",
+      "target": "usa",
+      "event_type": "ULTIMATUM",
+      "war_triggered": false,
+      "conflict_level": "tension"
     },
     {
       "round": 7,
-      "actor": "usa",
-      "target": "iran",
-      "event_type": "ULTIMATUM",
+      "actor": "eu",
+      "target": "russia",
+      "event_type": "SANCTION",
       "war_triggered": false,
       "conflict_level": "crisis"
     },
     {
       "round": 7,
       "actor": "iran",
-      "target": "eu",
-      "event_type": "STATEMENT",
+      "target": "russia",
+      "event_type": "TRADE",
       "war_triggered": false,
       "conflict_level": "crisis"
     },
     {
       "round": 7,
-      "actor": "russia",
+      "actor": "iran",
+      "target": "usa",
+      "event_type": "ULTIMATUM",
+      "war_triggered": false,
+      "conflict_level": "peace"
+    },
+    {
+      "round": 8,
+      "actor": "china",
       "target": "eu",
       "event_type": "SANCTION",
       "war_triggered": false,
@@ -640,175 +642,159 @@
     },
     {
       "round": 8,
-      "actor": "iran",
-      "target": "russia",
-      "event_type": "TRADE",
+      "actor": "usa",
+      "target": "china",
+      "event_type": "ULTIMATUM",
       "war_triggered": false,
       "conflict_level": "crisis"
     },
     {
-      "round": 8,
+      "round": 9,
+      "actor": "china",
+      "target": "usa",
+      "event_type": "CONDITIONS",
+      "war_triggered": false,
+      "conflict_level": "sanctions"
+    },
+    {
+      "round": 9,
       "actor": "russia",
       "target": "eu",
-      "event_type": "STATEMENT",
+      "event_type": "ULTIMATUM",
       "war_triggered": false,
-      "conflict_level": "sanctions"
-    },
-    {
-      "round": 8,
-      "actor": "eu",
-      "target": "china",
-      "event_type": "BREAK",
-      "war_triggered": false,
-      "conflict_level": "sanctions"
-    },
-    {
-      "round": 9,
-      "actor": "usa",
-      "target": "eu",
-      "event_type": "STATEMENT",
-      "war_triggered": false,
-      "conflict_level": "sanctions"
-    },
-    {
-      "round": 9,
-      "actor": "eu",
-      "target": "iran",
-      "event_type": "STATEMENT",
-      "war_triggered": false,
-      "conflict_level": "sanctions"
+      "conflict_level": "crisis"
     },
     {
       "round": 10,
-      "actor": "iran",
+      "actor": "eu",
       "target": "russia",
-      "event_type": "CONDITIONS",
+      "event_type": "TRADE",
       "war_triggered": false,
       "conflict_level": "sanctions"
     },
     {
       "round": 10,
       "actor": "eu",
+      "target": "iran",
+      "event_type": "STATEMENT",
+      "war_triggered": false,
+      "conflict_level": "tension"
+    },
+    {
+      "round": 10,
+      "actor": "china",
       "target": "usa",
-      "event_type": "WITHDRAW",
-      "war_triggered": false,
-      "conflict_level": "proxy_war"
-    },
-    {
-      "round": 11,
-      "actor": "usa",
-      "target": "china",
       "event_type": "SANCTION",
-      "war_triggered": false,
-      "conflict_level": "limited_war"
-    },
-    {
-      "round": 11,
-      "actor": "usa",
-      "target": "china",
-      "event_type": "CONDITIONS",
-      "war_triggered": false,
-      "conflict_level": "limited_war"
-    },
-    {
-      "round": 12,
-      "actor": "iran",
-      "target": "eu",
-      "event_type": "WITHDRAW",
       "war_triggered": false,
       "conflict_level": "sanctions"
     },
     {
-      "round": 12,
+      "round": 11,
       "actor": "china",
       "target": "russia",
-      "event_type": "STATEMENT",
+      "event_type": "TRADE",
+      "war_triggered": false,
+      "conflict_level": "crisis"
+    },
+    {
+      "round": 11,
+      "actor": "usa",
+      "target": "eu",
+      "event_type": "MEETING",
       "war_triggered": false,
       "conflict_level": "peace"
     },
     {
-      "round": 13,
+      "round": 12,
       "actor": "iran",
+      "target": "russia",
+      "event_type": "MEETING",
+      "war_triggered": false,
+      "conflict_level": "sanctions"
+    },
+    {
+      "round": 12,
+      "actor": "russia",
       "target": "china",
-      "event_type": "ULTIMATUM",
-      "war_triggered": true,
-      "conflict_level": "limited_war"
+      "event_type": "BREAK",
+      "war_triggered": false,
+      "conflict_level": "sanctions"
     },
     {
       "round": 13,
-      "actor": "russia",
-      "target": "eu",
-      "event_type": "CONDITIONS",
+      "actor": "china",
+      "target": "usa",
+      "event_type": "TRADE",
       "war_triggered": false,
       "conflict_level": "proxy_war"
     },
     {
       "round": 13,
-      "actor": "iran",
-      "target": "usa",
-      "event_type": "ULTIMATUM",
-      "war_triggered": false,
-      "conflict_level": "sanctions"
-    },
-    {
-      "round": 14,
-      "actor": "china",
-      "target": "iran",
-      "event_type": "ULTIMATUM",
-      "war_triggered": true,
-      "conflict_level": "total_war"
-    },
-    {
-      "round": 14,
-      "actor": "china",
-      "target": "usa",
-      "event_type": "MEETING",
-      "war_triggered": false,
-      "conflict_level": "total_war"
-    },
-    {
-      "round": 15,
-      "actor": "usa",
-      "target": "russia",
+      "actor": "eu",
+      "target": "china",
       "event_type": "ULTIMATUM",
       "war_triggered": false,
       "conflict_level": "crisis"
     },
     {
-      "round": 15,
-      "actor": "china",
+      "round": 14,
+      "actor": "eu",
       "target": "usa",
+      "event_type": "TRADE",
+      "war_triggered": false,
+      "conflict_level": "tension"
+    },
+    {
+      "round": 14,
+      "actor": "eu",
+      "target": "usa",
+      "event_type": "TRADE",
+      "war_triggered": false,
+      "conflict_level": "crisis"
+    },
+    {
+      "round": 14,
+      "actor": "iran",
+      "target": "china",
+      "event_type": "TRADE",
+      "war_triggered": false,
+      "conflict_level": "crisis"
+    },
+    {
+      "round": 15,
+      "actor": "usa",
+      "target": "iran",
       "event_type": "SANCTION",
       "war_triggered": false,
-      "conflict_level": "total_war"
+      "conflict_level": "tension"
     },
     {
       "round": 15,
       "actor": "russia",
-      "target": "usa",
-      "event_type": "STATEMENT",
-      "war_triggered": false,
-      "conflict_level": "sanctions"
-    },
-    {
-      "round": 16,
-      "actor": "russia",
       "target": "china",
-      "event_type": "WITHDRAW",
-      "war_triggered": false,
-      "conflict_level": "peace"
-    },
-    {
-      "round": 16,
-      "actor": "iran",
-      "target": "eu",
-      "event_type": "MEETING",
+      "event_type": "SANCTION",
       "war_triggered": false,
       "conflict_level": "proxy_war"
     },
     {
       "round": 16,
-      "actor": "russia",
+      "actor": "iran",
+      "target": "usa",
+      "event_type": "STATEMENT",
+      "war_triggered": false,
+      "conflict_level": "tension"
+    },
+    {
+      "round": 16,
+      "actor": "usa",
+      "target": "eu",
+      "event_type": "MEETING",
+      "war_triggered": false,
+      "conflict_level": "sanctions"
+    },
+    {
+      "round": 17,
+      "actor": "usa",
       "target": "iran",
       "event_type": "TRADE",
       "war_triggered": false,
@@ -816,75 +802,59 @@
     },
     {
       "round": 17,
-      "actor": "china",
-      "target": "iran",
-      "event_type": "BREAK",
-      "war_triggered": true,
-      "conflict_level": "total_war"
-    },
-    {
-      "round": 17,
-      "actor": "iran",
-      "target": "russia",
-      "event_type": "CONDITIONS",
-      "war_triggered": false,
-      "conflict_level": "sanctions"
-    },
-    {
-      "round": 17,
-      "actor": "iran",
-      "target": "usa",
-      "event_type": "SANCTION",
-      "war_triggered": false,
-      "conflict_level": "proxy_war"
-    },
-    {
-      "round": 18,
-      "actor": "russia",
-      "target": "china",
-      "event_type": "CONDITIONS",
-      "war_triggered": false,
-      "conflict_level": "tension"
-    },
-    {
-      "round": 18,
       "actor": "usa",
-      "target": "russia",
+      "target": "eu",
       "event_type": "STATEMENT",
       "war_triggered": false,
       "conflict_level": "proxy_war"
     },
     {
-      "round": 19,
-      "actor": "china",
+      "round": 17,
+      "actor": "iran",
       "target": "usa",
-      "event_type": "SANCTION",
+      "event_type": "ULTIMATUM",
       "war_triggered": false,
-      "conflict_level": "total_war"
+      "conflict_level": "crisis"
+    },
+    {
+      "round": 18,
+      "actor": "russia",
+      "target": "usa",
+      "event_type": "ULTIMATUM",
+      "war_triggered": false,
+      "conflict_level": "tension"
+    },
+    {
+      "round": 18,
+      "actor": "iran",
+      "target": "usa",
+      "event_type": "ULTIMATUM",
+      "war_triggered": false,
+      "conflict_level": "sanctions"
+    },
+    {
+      "round": 18,
+      "actor": "eu",
+      "target": "russia",
+      "event_type": "ULTIMATUM",
+      "war_triggered": false,
+      "conflict_level": "proxy_war"
     },
     {
       "round": 19,
-      "actor": "usa",
+      "actor": "russia",
       "target": "eu",
       "event_type": "MEETING",
-      "war_triggered": true,
-      "conflict_level": "limited_war"
+      "war_triggered": false,
+      "conflict_level": "proxy_war"
     },
     {
-      "round": 20,
-      "actor": "usa",
-      "target": "russia",
-      "event_type": "SANCTION",
+      "round": 19,
+      "actor": "russia",
+      "target": "china",
+      "event_type": "WITHDRAW",
       "war_triggered": false,
       "conflict_level": "limited_war"
-    },
-    {
-      "round": 20,
-      "actor": "china",
-      "target": "iran",
-      "event_type": "CONDITIONS",
-      "war_triggered": true,
-      "conflict_level": "total_war"
     },
     {
       "round": 20,
@@ -893,6 +863,14 @@
       "event_type": "MEETING",
       "war_triggered": false,
       "conflict_level": "sanctions"
+    },
+    {
+      "round": 20,
+      "actor": "iran",
+      "target": "russia",
+      "event_type": "STATEMENT",
+      "war_triggered": false,
+      "conflict_level": "proxy_war"
     }
   ]
 }

@@ -344,6 +344,27 @@ class DiplomacyIntegration:
                 self.alliance_system.update_alliances(
                     trust_levels, self.diplomacy.round
                 )
+                
+                # 🟡 Bug Fix: 自动检查同盟触发条件
+                # 信任门槛从0.3降至0.1以促进同盟形成
+                for aid, state in self.diplomacy.agents.items():
+                    for oid, other_state in self.diplomacy.agents.items():
+                        if aid >= oid:
+                            continue
+                        trust = state.get_trust(oid)
+                        # 信任 >= 0.1 时尝试提议建立防御同盟
+                        if trust >= 0.1:
+                            existing = self.alliance_system.get_agent_alliances(aid)
+                            already_allied = any(
+                                oid in self.alliance_system.alliances.get(aid2, {}).members
+                                for aid2 in existing
+                            )
+                            if not already_allied and len(existing) < self.alliance_system.max_alliances_per_agent:
+                                result = self.propose_alliance(
+                                    aid, [oid], "defensive", self.diplomacy.round
+                                )
+                                if result:
+                                    print(f"[Alliance] {aid} 与 {oid} 建立防御同盟 (trust={trust:.2f})")
             
             if self.sanction_network:
                 economies = {

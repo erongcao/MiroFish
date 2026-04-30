@@ -73,15 +73,18 @@ class AgentDiplomaticState:
     history: List[DiplomaticHistory] = field(default_factory=list)
     resources: float = 100.0          # 资源/国力
     war_exhaustion: float = 0.0       # 战争疲劳
+    intelligence_level: float = 1.0  # 情报等级（问题3）
     
     def update_reputation(self, action: DiplomaticAction, success: bool):
-        """更新声誉"""
+        """更新声誉 - 修复：增加恢复机制，降低下降速度"""
         if action == DiplomaticAction.COOPERATE and success:
-            self.reputation = min(1.0, self.reputation + 0.1)
+            self.reputation = min(1.0, self.reputation + 0.08)  # 略微降低单次增幅
         elif action == DiplomaticAction.DEFECT:
-            self.reputation = max(-1.0, self.reputation - 0.15)
+            self.reputation = max(-1.0, self.reputation - 0.10)  # 从 -0.15 降低
         elif action == DiplomaticAction.ESCALATE:
-            self.reputation = max(-1.0, self.reputation - 0.2)
+            self.reputation = max(-1.0, self.reputation - 0.15)  # 从 -0.2 降低
+        # 声誉自然恢复（每轮一次）
+        self.reputation = max(-1.0, min(1.0, self.reputation + 0.03))
     
     def get_trust(self, other_id: str) -> float:
         """获取对特定 agent 的信任度"""
@@ -159,17 +162,33 @@ class GameTheoryDiplomacy:
                 self.conflict_levels[key] = ConflictLevel.PEACE
     
     def calculate_diplomatic_outcome(self, agent_a: str, agent_b: str,
-                                   action_a: DiplomaticAction, 
+                                   action_a: DiplomaticAction,
                                    action_b: DiplomaticAction) -> Dict:
-        """计算外交结果 - 核心博弈论逻辑"""
+        """计算外交结果 - 核心博弈论逻辑（问题6: 动态Payoff矩阵）"""
         
         state_a = self.agents[agent_a]
         state_b = self.agents[agent_b]
         
-        # 1. 计算收益
-        payoff_a, payoff_b = self.payoff_matrix.get_payoff(action_a, action_b)
+        # ============ 问题6: 动态Payoff矩阵 ============
+        # 基础收益，但随资源/战争疲劳/情报等级动态调整
+        base_payoff_a, base_payoff_b = self.payoff_matrix.get_payoff(action_a, action_b)
         
-        # 2. 加入声誉影响
+        # 资源充足度因子（资源越高，进攻收益越高）
+        resource_factor_a = min(1.5, max(0.5, state_a.resources / 100.0))
+        resource_factor_b = min(1.5, max(0.5, state_b.resources / 100.0))
+        
+        # 战争疲劳因子（疲劳越高，升级成本越高）
+        fatigue_factor_a = 1.0 - state_a.war_exhaustion * 0.4
+        fatigue_factor_b = 1.0 - state_b.war_exhaustion * 0.4
+        
+        # 情报优势因子（情报等级越高，判断越准确，收益加成）
+        intel_factor_a = 0.7 + state_a.intelligence_level * 0.4
+        intel_factor_b = 0.7 + state_b.intelligence_level * 0.4
+        
+        payoff_a = base_payoff_a * resource_factor_a * fatigue_factor_a * intel_factor_a
+        payoff_b = base_payoff_b * resource_factor_b * fatigue_factor_b * intel_factor_b
+        
+        # 声誉影响
         reputation_factor_a = 1.0 + state_a.reputation * 0.2
         reputation_factor_b = 1.0 + state_b.reputation * 0.2
         
@@ -472,8 +491,14 @@ class GameTheoryDiplomacy:
         # 战争疲劳恢复
         for agent in self.agents.values():
             agent.war_exhaustion = max(0.0, agent.war_exhaustion - 0.05)
+            # 声誉自然恢复（每轮一次）
+            # 声誉自然恢复（每轮一次）
+            agent.reputation = max(-1.0, min(1.0, agent.reputation + 0.05))
             # 资源缓慢恢复
             agent.resources = min(200.0, agent.resources + 2.0)
+    
+    # 别名兼容
+    advance_round = next_round
     
     def get_agent_stats(self, agent_id: str) -> Dict:
         """获取 agent 统计信息"""
@@ -511,6 +536,17 @@ class GameTheoryDiplomacy:
             "avg_war_exhaustion": avg_war_exhaustion,
             "conflict_distribution": dict(conflict_counts),
             "total_conflicts": len(self.conflict_levels)
+        }
+    
+    def get_conflict_summary(self) -> Dict:
+        """获取冲突摘要"""
+        conflict_counts = defaultdict(int)
+        for level in self.conflict_levels.values():
+            conflict_counts[level.value] += 1
+        return {
+            "conflict_distribution": dict(conflict_counts),
+            "total_conflicts": len(self.conflict_levels),
+            "avg_war_exhaustion": sum(a.war_exhaustion for a in self.agents.values()) / max(1, len(self.agents))
         }
 
 # 测试代码

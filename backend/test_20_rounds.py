@@ -194,7 +194,7 @@ def run_simulation(max_rounds=20):
                     print(f"⚠️ 制裁: {', '.join(imposers)} → {target} ({severity}, 影响: {sanction['economic_impact']:.1%})")
         
         # 随机尝试调解（如果冲突严重）- 提高触发概率
-        if random.random() < 0.5 and integration.mediation:
+        if random.random() < 0.7 and integration.mediation:
             parties = random.sample(agent_ids, 2)
             mediator = integration.mediation.find_best_mediator(parties, 'crisis', round_num)
             if mediator:

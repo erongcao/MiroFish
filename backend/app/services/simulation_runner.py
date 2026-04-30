@@ -420,8 +420,12 @@ class SimulationRunner:
             ]
             
             # 如果指定了最大轮数，添加到命令行参数
+            # 添加 --no-wait 让模拟在完成后自动退出（不进入命令等待模式）
             if max_rounds is not None and max_rounds > 0:
-                cmd.extend(["--max-rounds", str(max_rounds)])
+                cmd.extend(["--max-rounds", str(max_rounds), "--no-wait"])
+            else:
+                # 无 max_rounds 时也默认使用 --no-wait，避免管道阻塞
+                cmd.append("--no-wait")
             
             # 创建主日志文件，避免 stdout/stderr 管道缓冲区满导致进程阻塞
             main_log_path = os.path.join(sim_dir, "simulation.log")

@@ -1,10 +1,15 @@
 """
 Two-Layer Integration Bridge - 双层集成桥接器
 将三层地缘政治模拟器与OASIS社交媒体模拟器结合
+
+核心修复 (v2):
+- 新增 OASIS Agent ID → 地缘政治国家 ID 的映射
+- 社交媒体舆论现在能正确影响国际压力、国内派系和策略选择
 """
 
 import os
 import sys
+import csv
 from typing import Dict, List, Any, Optional
 
 # 导入CountryState以便类型检查
@@ -19,6 +24,50 @@ except ImportError:
             self.international_pressure = 0
             self.public_support = 0.5
 
+
+# 地缘政治国家ID与国家名称的映射（用于从CSV的entity_name推断country_id）
+COUNTRY_NAME_TO_ID = {
+    "美国": "usa", "美国": "usa", "United States": "usa",
+    "伊朗": "iran", "伊朗": "iran",
+    "以色列": "israel", "以色列": "israel",
+    "俄罗斯": "russia", "俄国": "russia", "Russia": "russia",
+    "中国": "china", "中国": "china", "China": "china",
+    "欧盟": "eu", "欧洲": "eu", "EU": "eu",
+    "沙特": "saudi", "沙特阿拉伯": "saudi",
+    "朝鲜": "dprk", "北韩": "dprk",
+    "韩国": "rok", "南韩": "rok",
+    "日本": "japan",
+    "英国": "uk", "英国": "uk",
+    "法国": "france",
+    "德国": "germany",
+    "印度": "india",
+    "巴基斯坦": "pakistan",
+    "土耳其": "turkey",
+    "澳大利亚": "australia",
+    "巴西": "brazil",
+    "墨西哥": "mexico",
+}
+
+# CSV中常见的force/faction类型关键词 → 国家ID
+FORCE_KEYWORD_TO_COUNTRY = {
+    "美国": "usa", "美": "usa", "US": "usa", "America": "usa",
+    "伊朗": "iran", "伊": "iran",
+    "以色列": "israel", "以": "israel",
+    "俄罗斯": "russia", "俄": "russia", "Russia": "russia",
+    "中国": "china", "中": "china", "China": "china",
+    "欧盟": "eu", "欧": "eu", "EU": "eu", "Europe": "eu",
+    "沙特": "saudi", "沙": "saudi",
+    "朝鲜": "dprk", "北韩": "dprk",
+    "韩国": "rok", "南韩": "rok", "Korea": "rok",
+    "日本": "japan", "日": "japan",
+    "英国": "uk", "英": "uk",
+    "法国": "france", "法": "france",
+    "德国": "germany", "德": "germany",
+    "印度": "india", "印": "india",
+    "巴基斯坦": "pakistan", "巴": "pakistan",
+}
+
+
 class TwoLayerBridge:
     """
     双层架构桥接器
@@ -28,13 +77,22 @@ class TwoLayerBridge:
     
     桥接机制:
     1. 上层事件 -> 下层context
-    2. 下层舆论 -> 上层反馈
+    2. 下层舆论 -> 上层反馈（修复：正确的Agent→Country映射）
     """
     
-    def __init__(self, simulation_dir: str, config: Dict[str, Any]):
+    def __init__(self, simulation_dir: str, config: Dict[str, Any],
+                 agent_country_mapping: Optional[Dict[str, str]] = None):
         self.simulation_dir = simulation_dir
         self.config = config
         self.enabled = True
+        
+        # Agent ID → Country ID 映射（OASIS层 → 地缘政治层）
+        # 格式: { "0": "usa", "1": "iran", ... } 或 { "twitter_0": "usa", ... }
+        self.agent_to_country: Dict[str, str] = agent_country_mapping or {}
+        
+        # 如果没有传入映射，尝试从profiles CSV自动加载
+        if not self.agent_to_country:
+            self._try_load_mapping_from_profiles()
         
         # 尝试导入三层模拟器（增强版）
         try:
@@ -176,14 +234,19 @@ class TwoLayerBridge:
         
         return "\n".join(prompt_parts)
     
-    def simulate_round(self) -> Dict[str, Any]:
+    def simulate_round(self, media_posts: Optional[Dict[str, List[str]]] = None) -> Dict[str, Any]:
         """
-        执行一层模拟
+        执行地缘政治层模拟轮次
+        
+        Args:
+            media_posts: 可选的社交媒体帖子 {country_id: [posts]}
+                           如果为None，则使用本轮通过 process_social_media_round 收集的帖子
         """
         if not self.geo_simulator:
             return {}
         
-        return self.geo_simulator.simulate_round()
+        # 如果传入了 media_posts，直接使用；否则传 None 让 geo_simulator 自己处理
+        return self.geo_simulator.simulate_round(media_posts=media_posts)
     
     def on_social_media_action(self, agent_id: str, agent_name: str, 
                                action_type: str, content: str) -> Dict[str, Any]:
@@ -250,6 +313,63 @@ class TwoLayerBridge:
             "international_pressure": self.geo_simulator.countries.get(agent_id, CountryState("", "")).international_pressure if agent_id in self.geo_simulator.countries else 0
         }
     
+    def _resolve_country_id(self, agent_id: str, agent_name: str = "") -> Optional[str]:
+        """
+        将OASIS Agent ID（或名称）解析为地缘政治层的Country ID。
+        优先级：
+        1. 显式映射表 agent_to_country
+        2. 从 agent_name 中匹配国家关键词
+        3. 回退到 None（无法解析）
+        """
+        # 1. 查映射表
+        if agent_id in self.agent_to_country:
+            return self.agent_to_country[agent_id]
+        
+        # 2. 尝试从 agent_name 推断
+        name_to_check = agent_name.lower() if agent_name else ""
+        for keyword, country_id in FORCE_KEYWORD_TO_COUNTRY.items():
+            if keyword in name_to_check:
+                return country_id
+        
+        # 3. 检查 agent_id 本身是否就是国家名
+        agent_lower = agent_id.lower()
+        for keyword, country_id in FORCE_KEYWORD_TO_COUNTRY.items():
+            if keyword in agent_lower:
+                return country_id
+        
+        return None
+
+    def _try_load_mapping_from_profiles(self):
+        """尝试从 profiles CSV 加载 Agent → Country 映射"""
+        for platform in ["twitter", "reddit"]:
+            csv_path = os.path.join(self.simulation_dir, f"{platform}_profiles.csv")
+            if not os.path.exists(csv_path):
+                continue
+            try:
+                with open(csv_path, "r", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    for row in reader:
+                        user_id = str(row.get("user_id", "")).strip()
+                        entity_name = row.get("entity_name", "").strip()
+                        if not user_id or not entity_name:
+                            continue
+                        
+                        # 从 entity_name 推断 country_id
+                        country_id = self._resolve_country_id(user_id, entity_name)
+                        if country_id:
+                            self.agent_to_country[user_id] = country_id
+                        elif entity_name:
+                            # 尝试直接匹配
+                            en_lower = entity_name.lower()
+                            if en_lower in COUNTRY_NAME_TO_ID:
+                                self.agent_to_country[user_id] = COUNTRY_NAME_TO_ID[en_lower]
+                
+                if self.agent_to_country:
+                    print(f"[TwoLayerBridge] 从 {platform}_profiles.csv 加载了 {len(self.agent_to_country)} 个映射")
+                    break
+            except Exception as e:
+                print(f"[TwoLayerBridge] 加载 profiles CSV 失败: {e}")
+
     def process_social_media_round(self, actions: List[Dict]) -> Dict[str, Any]:
         """
         处理一轮社交媒体动作（批量处理）
@@ -264,21 +384,37 @@ class TwoLayerBridge:
         if not self.geo_simulator:
             return {}
         
-        # 收集各国的帖子
-        media_posts = {}
+        # 按国家收集帖子（关键修复：映射 agent_id → country_id）
+        media_posts: Dict[str, List[str]] = {}  # country_id -> [posts]
+        
         for action in actions:
             agent_id = str(action.get("agent_id", ""))
+            agent_name = action.get("agent_name", "")
             content = action.get("action_args", {}).get("content", "")
             
-            if agent_id and content:
-                if agent_id not in media_posts:
-                    media_posts[agent_id] = []
-                media_posts[agent_id].append(content)
+            if not content:
+                continue
+            
+            # 解析为 country_id
+            country_id = self._resolve_country_id(agent_id, agent_name)
+            
+            if country_id:
+                if country_id not in media_posts:
+                    media_posts[country_id] = []
+                media_posts[country_id].append(content)
                 
-                # 逐个处理
+                # 逐个处理舆论反馈（使用映射后的 country_id）
+                self.on_social_media_action(
+                    agent_id=country_id,  # 使用 country_id，不是 agent_id
+                    agent_name=agent_name,
+                    action_type=action.get("action_type", ""),
+                    content=content
+                )
+            else:
+                # 无法解析时，尝试直接用 agent_id（向后兼容）
                 self.on_social_media_action(
                     agent_id=agent_id,
-                    agent_name=action.get("agent_name", ""),
+                    agent_name=agent_name,
                     action_type=action.get("action_type", ""),
                     content=content
                 )
@@ -325,15 +461,19 @@ class TwoLayerBridge:
     def get_enriched_context(self, agent_id: str, agent_name: str) -> Dict[str, Any]:
         """
         获取增强上下文（包含舆论反馈影响）
+        支持 OASIS Agent ID 自动映射到地缘政治国家
         """
+        # 解析 country_id（支持 OASIS agent ID → 地缘政治国家映射）
+        country_id = self._resolve_country_id(agent_id, agent_name) or agent_id
+        
         base_context = self.get_current_context(agent_id, agent_name)
         
         if not base_context:
             return {}
         
-        # 添加舆论反馈信息
-        if agent_id in self.geo_simulator.countries:
-            country = self.geo_simulator.countries[agent_id]
+        # 添加舆论反馈信息（使用 country_id 查找）
+        if country_id in self.geo_simulator.countries:
+            country = self.geo_simulator.countries[country_id]
             base_context["international_pressure"] = country.international_pressure
             base_context["dominant_faction"] = country.dominant_faction.value if hasattr(country, 'dominant_faction') else "moderates"
             base_context["government_stability"] = country.government_stability if hasattr(country, 'government_stability') else 0.8
@@ -348,6 +488,8 @@ class TwoLayerBridge:
                     }
                     for faction, data in country.factions.items()
                 }
+            # 标注原始 OASIS agent_id
+            base_context["_oasis_agent_id"] = agent_id
         
         return base_context
     

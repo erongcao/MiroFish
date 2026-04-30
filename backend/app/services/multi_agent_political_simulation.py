@@ -1,11 +1,21 @@
 """
 Multi-Agent Political Simulation - 多智能体政治模拟
 所有势力都是独立的Agent，互相博弈形成复杂的局势
+
+核心改进 (v2):
+1. Q-Learning策略适应：从历史博弈中学习
+2. 情报不对称：不同Agent有不同情报等级
+3. 动态联盟博弈：实时联盟形成/瓦解
+4. 时间维度：动员延迟、情报延迟
+5. 动态Payoff：随战争疲劳/资源实时调整
+6. LLM高并发：Semaphore提升到30 + 超时控制
 """
 
 import json
 import time
 import asyncio
+import random
+import math
 from typing import Dict, List, Optional, Tuple, Set
 from dataclasses import dataclass, field
 from collections import defaultdict
@@ -53,6 +63,22 @@ class Agent:
     government_role: str = ""  # "president", "secretary_of_state", "general", etc.
     faction: str = ""  # " Hawks", "doves", "pragmatists"
     
+    # ============ 新增：问题3 - 情报等级 ============
+    # 情报等级决定能看到多少信息（0=完全内部信息，1=完全透明）
+    intelligence_level: float = 1.0  # 默认完全透明
+    
+    # ============ 新增：问题5 - 时间维度 ============
+    time_to_mobilize: int = 0  # 动员延迟（轮数）
+    mobilization_ready: float = 1.0  # 当前动员就绪度（0-1）
+    intelligence_lag: int = 0  # 情报延迟（轮数）
+    pending_actions: List[Dict] = field(default_factory=list)  # 延迟执行的行动
+    
+    # ============ 新增：问题2 - Q-Learning策略适应 ============
+    q_table: Dict[str, float] = field(default_factory=dict)  # Q(s,a) 值
+    learning_rate: float = 0.1  # alpha
+    discount_factor: float = 0.9  # gamma
+    epsilon: float = 0.2  # 探索率
+    
     def get_alliance_power(self, all_agents: Dict[str, 'Agent']) -> float:
         """计算联盟总力量"""
         total = self.power
@@ -68,6 +94,36 @@ class Agent:
             if enemy_id in all_agents:
                 total += all_agents[enemy_id].power
         return total
+    
+    def get_q(self, state_key: str, action: DiplomaticAction) -> float:
+        key = f"{state_key}_{action.value}"
+        return self.q_table.get(key, 0.0)
+    
+    def update_q(self, state_key: str, action: DiplomaticAction, reward: float,
+                 next_state_key: str, max_next_q: float):
+        """Q-Learning更新"""
+        key = f"{state_key}_{action.value}"
+        current_q = self.q_table.get(key, 0.0)
+        # Q(s,a) = Q(s,a) + alpha * (r + gamma * max_a' Q(s',a') - Q(s,a))
+        new_q = current_q + self.learning_rate * (
+            reward + self.discount_factor * max_next_q - current_q
+        )
+        self.q_table[key] = new_q
+    
+    def choose_action_epsilon_greedy(self, state_key: str,
+                                    valid_actions: List[DiplomaticAction]) -> DiplomaticAction:
+        """ε-贪心策略选择"""
+        if random.random() < self.epsilon:
+            return random.choice(valid_actions)
+        # 贪心选择Q值最大的动作
+        best_action = valid_actions[0]
+        best_q = self.get_q(state_key, best_action)
+        for action in valid_actions[1:]:
+            q = self.get_q(state_key, action)
+            if q > best_q:
+                best_q = q
+                best_action = action
+        return best_action
 
 
 class MultiAgentPoliticalSimulation:
@@ -96,6 +152,12 @@ class MultiAgentPoliticalSimulation:
         
         # 1. 美国势力 (14个)
         for force_id, force in US_POLITICAL_FORCES.items():
+            # ============ 问题3+5: 情报等级 + 时间维度 ============
+            # 情报等级：政府/军方高，平民低；美国整体最高
+            intel_level = 0.9 if force.force_type in ["government", "military", "military_industrial"] else 0.5
+            mob_delay = 2 if force.force_type in ["military", "military_industrial"] else 0
+            intel_lag = 1 if force.force_type == "civilian" else 0
+            
             agent = Agent(
                 agent_id=f"us_{force_id}",
                 name=f"美国{force.name_cn}",
@@ -103,6 +165,9 @@ class MultiAgentPoliticalSimulation:
                 force_type=force.force_type,
                 power=force.overall_influence * 0.8,
                 resources=100.0,
+                intelligence_level=intel_level,
+                time_to_mobilize=mob_delay,
+                intelligence_lag=intel_lag,
                 stance={
                     "china": force.stance_china,
                     "russia": force.stance_russia,
@@ -117,17 +182,21 @@ class MultiAgentPoliticalSimulation:
                 agent.enemies.update(["cn_military_red", "ru_siloviki"])
             
             self.agents[agent.agent_id] = agent
-            print(f"  [美国] {agent.name} (power={agent.power:.2f})")
+            print(f"  [美国] {agent.name} (power={agent.power:.2f}, intel={intel_level:.1f})")
         
         # 2. 中国势力 (10个)
         for force_id, force in CHINA_POLITICAL_FORCES.items():
+            intel_level = 0.85 if getattr(force, 'force_type', '') in ["government", "military"] else 0.5
+            mob_delay = 2 if getattr(force, 'force_type', '') in ["military", "security"] else 1
             agent = Agent(
                 agent_id=f"cn_{force_id}",
                 name=f"中国{force.name_cn}",
                 country="china",
-                force_type=getattr(force, 'force_type', force.ideology),  # 使用force_type或ideology
+                force_type=getattr(force, 'force_type', force.ideology),
                 power=force.overall_influence * 0.8,
                 resources=100.0,
+                intelligence_level=intel_level,
+                time_to_mobilize=mob_delay,
                 stance={
                     "usa": getattr(force, 'stance_usa', 0),
                     "russia": getattr(force, 'stance_russia', 0),
@@ -136,17 +205,21 @@ class MultiAgentPoliticalSimulation:
             )
             
             self.agents[agent.agent_id] = agent
-            print(f"  [中国] {agent.name} (power={agent.power:.2f})")
+            print(f"  [中国] {agent.name} (power={agent.power:.2f}, intel={intel_level:.1f})")
         
         # 3. 俄罗斯势力 (9个)
         for force_id, force in RUSSIA_POLITICAL_FORCES.items():
+            intel_level = 0.85 if getattr(force, 'force_type', '') in ["government", "military", "siloviki"] else 0.5
+            mob_delay = 2 if getattr(force, 'force_type', '') in ["military", "siloviki"] else 1
             agent = Agent(
                 agent_id=f"ru_{force_id}",
                 name=f"俄罗斯{force.name_cn}",
                 country="russia",
-                force_type=getattr(force, 'force_type', 'security'),  # 默认为security
+                force_type=getattr(force, 'force_type', 'security'),
                 power=force.overall_influence * 0.8,
                 resources=100.0,
+                intelligence_level=intel_level,
+                time_to_mobilize=mob_delay,
                 stance={
                     "west": getattr(force, 'stance_west', 0),
                     "china": getattr(force, 'stance_china', 0),
@@ -154,10 +227,12 @@ class MultiAgentPoliticalSimulation:
             )
             
             self.agents[agent.agent_id] = agent
-            print(f"  [俄罗斯] {agent.name} (power={agent.power:.2f})")
+            print(f"  [俄罗斯] {agent.name} (power={agent.power:.2f}, intel={intel_level:.1f})")
         
         # 4. 欧盟势力 (10个)
         for force_id, force in EU_POLITICAL_FORCES.items():
+            intel_level = 0.8 if getattr(force, 'force_type', '') in ["government", "military"] else 0.5
+            mob_delay = 2 if getattr(force, 'force_type', '') == "military" else 1
             agent = Agent(
                 agent_id=f"eu_{force_id}",
                 name=f"欧盟{force.name_cn}",
@@ -165,6 +240,8 @@ class MultiAgentPoliticalSimulation:
                 force_type=getattr(force, 'force_type', 'political'),
                 power=force.overall_influence * 0.6,  # 欧盟力量打折
                 resources=80.0,
+                intelligence_level=intel_level,
+                time_to_mobilize=mob_delay,
                 stance={
                     "usa": getattr(force, 'stance_usa', 0),
                     "china": getattr(force, 'stance_china', 0),
@@ -173,7 +250,7 @@ class MultiAgentPoliticalSimulation:
             )
             
             self.agents[agent.agent_id] = agent
-            print(f"  [欧盟] {agent.name} (power={agent.power:.2f})")
+            print(f"  [欧盟] {agent.name} (power={agent.power:.2f}, intel={intel_level:.1f})")
         
         # 5. 政府内部派系（特殊Agent）
         self._add_government_agents()
@@ -720,12 +797,16 @@ class MultiAgentPoliticalSimulation:
             task = self._generate_agent_decision_async(agent, scenario, context, round_num)
             tasks.append(task)
         
-        # 限制并发数避免过载Ollama
-        semaphore = asyncio.Semaphore(10)
+        # 限制并发数避免过载Ollama（问题1修复：提升到30）
+        semaphore = asyncio.Semaphore(30)
         
         async def bounded_task(task):
             async with semaphore:
-                return await task
+                try:
+                    return await asyncio.wait_for(task, timeout=30.0)
+                except asyncio.TimeoutError:
+                    print(f"  [超时] Agent决策超时，已跳过")
+                    return {"agent_id": None, "decision": {"action": DiplomaticAction.COOPERATE, "target": "none", "reasoning": "timeout"}}
         
         bounded_tasks = [bounded_task(t) for t in tasks]
         results = await asyncio.gather(*bounded_tasks, return_exceptions=True)
@@ -774,22 +855,56 @@ class MultiAgentPoliticalSimulation:
         return results
     
     def _update_alliances_and_enemies(self, payoff_results: Dict):
-        """更新联盟和敌对关系"""
-        # 基于博弈结果更新
+        """更新联盟和敌对关系（动态联盟博弈）"""
+        # 基于博弈结果 + 联盟稳定性更新
+        alliance_scores: Dict[Tuple[str, str], float] = {}
+        
         for key, result in payoff_results.items():
             agent_a_id, agent_b_id = key.split("|")
             
             payoff_a = result["payoff_a"]
             payoff_b = result["payoff_b"]
             
-            # 高收益 -> 可能结盟
+            # ============ 问题4: 动态联盟博弈 ============
+            # 计算联盟吸引力分数
+            combined_payoff = payoff_a + payoff_b
+            a = self.agents[agent_a_id]
+            b = self.agents[agent_b_id]
+            
+            # 联盟收益 = 双方博弈收益 + 联盟力量加成 - 背叛风险
+            alliance_bonus = 0.0
             if payoff_a > 2 and payoff_b > 2:
-                self.agents[agent_a_id].allies.add(agent_b_id)
-                self.agents[agent_b_id].allies.add(agent_a_id)
-            # 低收益/背叛 -> 敌对
-            elif result.get("betrayal_by_a") or result.get("betrayal_by_b"):
-                self.agents[agent_a_id].enemies.add(agent_b_id)
-                self.agents[agent_b_id].enemies.add(agent_a_id)
+                # 同盟：力量叠加
+                alliance_bonus = min(a.power, b.power) * 0.2
+                alliance_scores[(agent_a_id, agent_b_id)] = combined_payoff + alliance_bonus
+            elif payoff_a < 0 or payoff_b < 0:
+                # 背叛风险：降低联盟吸引力
+                alliance_scores[(agent_a_id, agent_b_id)] = combined_payoff - 2.0
+        
+        # 联盟形成：收益超过阈值则结盟
+        for (a_id, b_id), score in alliance_scores.items():
+            if score > 3.5:  # 联盟收益阈值
+                self.agents[a_id].allies.add(b_id)
+                self.agents[b_id].allies.add(a_id)
+                self.agents[a_id].enemies.discard(b_id)
+                self.agents[b_id].enemies.discard(a_id)
+            elif score < -1.0:  # 联盟崩溃阈值
+                self.agents[a_id].allies.discard(b_id)
+                self.agents[b_id].allies.discard(a_id)
+                self.agents[a_id].enemies.add(b_id)
+                self.agents[b_id].enemies.add(a_id)
+        
+        # 同盟内部凝聚力检查：盟友间的博弈收益若持续为负则瓦解
+        for agent in self.agents.values():
+            for ally_id in list(agent.allies):
+                key = "|".join(sorted([agent.agent_id, ally_id]))
+                if key in payoff_results:
+                    result = payoff_results[key]
+                    a_payoff = result["payoff_a"] if agent.agent_id == key.split("|")[0] else result["payoff_b"]
+                    if a_payoff < -1.0 and random.random() < 0.3:
+                        # 30%概率盟友关系破裂
+                        agent.allies.discard(ally_id)
+                        self.agents[ally_id].enemies.add(agent.agent_id)
     
     def _analyze_power_shifts(self) -> Dict:
         """分析势力格局变化"""
@@ -806,7 +921,18 @@ class MultiAgentPoliticalSimulation:
         }
     
     def _update_agent_states(self, payoff_results: Dict):
-        """更新Agent状态 - 经济资源系统"""
+        """更新Agent状态 - 经济资源系统 + Q-Learning适应"""
+        # ============ 问题2: Q-Learning策略适应 ============
+        # 构建上一轮状态（所有Agent）
+        prev_states = {}
+        for agent in self.agents.values():
+            fatigue_bucket = int(agent.war_exhaustion * 3)  # 0/1/2/3
+            resource_bucket = int(agent.resources / 50)  # 0/1/2/3
+            prev_states[agent.agent_id] = f"F{fatigue_bucket}_R{resource_bucket}"
+        
+        # 一次性创建valid_actions，避免循环内重复创建
+        valid_actions = list(DiplomaticAction)
+        
         for key, result in payoff_results.items():
             agent_a_id, agent_b_id = key.split("|")
             agent_a = self.agents[agent_a_id]
@@ -864,6 +990,36 @@ class MultiAgentPoliticalSimulation:
                     # 不同势力冲突，资源消耗（但可控）
                     agent_a.resources = max(10.0, agent_a.resources - 0.3)
                     agent_b.resources = max(10.0, agent_b.resources - 0.3)
+            
+            # ============ 问题2: Q-Learning更新 ============
+            # 基于本轮收益更新Q表
+            prev_state_a = prev_states.get(agent_a_id, "F0_R2")
+            prev_state_b = prev_states.get(agent_b_id, "F0_R2")
+            
+            # 计算当前状态（两个Agent都要计算）
+            curr_fatigue_a = int(agent_a.war_exhaustion * 3)
+            curr_resource_a = int(agent_a.resources / 50)
+            curr_state_a = f"F{curr_fatigue_a}_R{curr_resource_a}"
+            
+            curr_fatigue_b = int(agent_b.war_exhaustion * 3)
+            curr_resource_b = int(agent_b.resources / 50)
+            curr_state_b = f"F{curr_fatigue_b}_R{curr_resource_b}"
+            
+            # max Q(s') for both agents
+            max_q_a = max(agent_a.get_q(curr_state_a, a) for a in valid_actions)
+            max_q_b = max(agent_b.get_q(curr_state_b, b) for b in valid_actions)
+            
+            # 奖励 = 收益 - 成本（问题6: 动态奖励）
+            reward_a = result["payoff_a"] - cost_a + (agent_a.war_exhaustion * -2)
+            reward_b = result["payoff_b"] - cost_b + (agent_b.war_exhaustion * -2)
+            
+            # Q-Learning更新
+            agent_a.update_q(prev_state_a, action_a, reward_a, curr_state_a, max_q_a)
+            agent_b.update_q(prev_state_b, action_b, reward_b, curr_state_b, max_q_b)
+            
+            # epsilon衰减（每轮降低2%，最低5%）
+            agent_a.epsilon = max(0.05, agent_a.epsilon * 0.98)
+            agent_b.epsilon = max(0.05, agent_b.epsilon * 0.98)
     
     def _calculate_resource_income(self, agent: Agent) -> float:
         """计算资源生成（经济系统v2 - 战争消耗版）"""
