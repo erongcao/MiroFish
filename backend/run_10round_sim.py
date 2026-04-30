@@ -5,6 +5,11 @@
 import sys
 import os
 
+# 重要：在导入任何模块之前设置环境变量
+os.environ['KIMI_API_KEY'] = 'sk-YRFqC7sQoxGKk90lNeBcBu9OJ9mjckrvVXjuf85Dv7tMxN0c'
+os.environ['LLM_MODEL_NAME'] = 'kimi-k2.6'
+os.environ.pop('LLM_API_KEY', None)  # 确保不使用Ollama
+
 # 添加路径 - 关键：需要同时添加 backend root 和 app/services
 sys.path.insert(0, '/tmp/mirofish/backend')
 sys.path.insert(0, '/tmp/mirofish/backend/app/services')
@@ -12,7 +17,8 @@ os.chdir('/tmp/mirofish/backend')
 
 from multi_agent_political_simulation import MultiAgentPoliticalSimulation
 
-sim = MultiAgentPoliticalSimulation()
+# 明确使用Kimi provider进行LLM调用
+sim = MultiAgentPoliticalSimulation("kimi")
 
 scenario = '波斯湾战争：伊朗封锁霍尔木兹海峡'
 context = '''2026年4月，中东局势急剧恶化。伊朗以"抵抗以色列侵略"为由，宣布封锁霍尔木兹海峡。

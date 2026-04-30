@@ -16,7 +16,7 @@ LLM_CONFIG = {
     "kimi": {
         "api_key": os.environ.get("KIMI_API_KEY", ""),
         "base_url": "https://api.moonshot.cn/v1",
-        "model": "moonshot-v1-8k",
+        "model": os.environ.get("LLM_MODEL_NAME", "moonshot-v1-8k"),
     },
     "openai": {
         "api_key": os.environ.get("OPENAI_API_KEY", ""),
@@ -32,6 +32,11 @@ LLM_CONFIG = {
         "api_key": os.environ.get("LLM_API_KEY", "ollama-local"),
         "base_url": os.environ.get("LLM_BASE_URL", "http://localhost:11434/v1"),
         "model": os.environ.get("LLM_MODEL_NAME", "qwen3-coder:latest"),
+    },
+    "dashscope": {
+        "api_key": os.environ.get("DASHSCOPE_API_KEY", "sk-00a5136c6276471fa72db5928c613e1a"),
+        "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "model": os.environ.get("DASHSCOPE_MODEL", "qwen-plus"),
     },
 }
 
@@ -80,6 +85,8 @@ class LLMClient:
             return "openai"
         if os.environ.get("GOOGLE_API_KEY"):
             return "google"
+        if os.environ.get("DASHSCOPE_API_KEY"):
+            return "dashscope"
         # 默认Ollama（本地）
         return "ollama"
     
@@ -96,8 +103,14 @@ class LLMClient:
                 return self._chat_openai(messages, temperature, max_tokens)
             elif self.provider == "google":
                 return self._chat_google(messages, temperature, max_tokens)
+            elif self.provider == "dashscope":
+                return self._chat_openai(messages, temperature, max_tokens)
             elif self.provider == "ollama":
                 return self._chat_ollama(messages, temperature, max_tokens)
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode('utf-8') if e.fp else str(e)
+            print(f"LLM API Error: HTTP {e.code} {e.reason}: {error_body[:500]}")
+            return None
         except Exception as e:
             print(f"LLM API Error: {e}")
             return None
@@ -106,6 +119,12 @@ class LLMClient:
                    max_tokens: int) -> Optional[LLMResponse]:
         """调用Kimi API"""
         url = f"{self.base_url}/chat/completions"
+        
+        # Kimi推理模型(kimi-k2.6, kimi-k2.5等)只接受temperature=1.0
+        reasoning_models = ["kimi-k2.6", "kimi-k2.5", "kimi-k2-thinking", 
+                           "kimi-k2-thinking-turbo", "kimi-k2-turbo-preview"]
+        if any(rm in self.model for rm in reasoning_models):
+            temperature = 1.0
         
         headers = {
             "Content-Type": "application/json",
@@ -129,8 +148,14 @@ class LLMClient:
         with urllib.request.urlopen(req, timeout=60) as response:
             result = json.loads(response.read().decode("utf-8"))
             
+            # 处理kimi-k2.6等支持reasoning的模型
+            message = result["choices"][0]["message"]
+            content = message.get("content", "")
+            if not content and message.get("reasoning_content"):
+                content = message["reasoning_content"]
+            
             return LLMResponse(
-                content=result["choices"][0]["message"]["content"],
+                content=content,
                 model=result.get("model", self.model),
                 tokens_used=result.get("usage", {}).get("total_tokens", 0),
                 finish_reason=result["choices"][0].get("finish_reason", ""),
