@@ -677,7 +677,9 @@ class MultiAgentPoliticalSimulation:
                 # 决策关系
                 if agent_id in decisions:
                     decision = decisions[agent_id]
-                    action = decision.get('action', 'unknown')
+                    action_val = decision.get('action', 'unknown')
+                    if hasattr(action_val, 'value'):
+                        action_val = str(action_val.value)
                     target = decision.get('target', '')
                     
                     self.neo4j.create_node(
@@ -686,7 +688,7 @@ class MultiAgentPoliticalSimulation:
                         properties={
                             "id": f"{agent_id}_r{round_num}",
                             "agent_id": agent_id,
-                            "action": action,
+                            "action": action_val,
                             "target": target,
                             "round": round_num,
                             "reasoning": decision.get('reasoning', '')[:200],
@@ -697,7 +699,7 @@ class MultiAgentPoliticalSimulation:
                         edge_type="MADE_DECISION",
                         source_id=agent_id,
                         target_id=f"{agent_id}_r{round_num}",
-                        properties={"action": action, "round": round_num}
+                        properties={"action": action_val, "round": round_num}
                     )
             
             # 博弈结果关系（所有Agent两两博弈）
@@ -709,6 +711,22 @@ class MultiAgentPoliticalSimulation:
                 
                 game_result_node_id = f"game_result_{pair_key}_r{round_num}".replace('|', '_')
                 
+                # 安全转换：enum -> str
+                action_a_val = result.get('action_a', '')
+                action_b_val = result.get('action_b', '')
+                if hasattr(action_a_val, 'value'):
+                    action_a_val = str(action_a_val.value)
+                elif action_a_val is None:
+                    action_a_val = ''
+                if hasattr(action_b_val, 'value'):
+                    action_b_val = str(action_b_val.value)
+                elif action_b_val is None:
+                    action_b_val = ''
+                
+                conflict_val = result.get('conflict_level', 'unknown')
+                if hasattr(conflict_val, 'value'):
+                    conflict_val = str(conflict_val.value)
+                
                 self.neo4j.create_node(
                     node_id=game_result_node_id,
                     labels=["GameResult"],
@@ -718,9 +736,9 @@ class MultiAgentPoliticalSimulation:
                         "agent_b": agent_b_id,
                         "payoff_a": round(result.get('payoff_a', 0), 2),
                         "payoff_b": round(result.get('payoff_b', 0), 2),
-                        "action_a": result.get('action_a', ''),
-                        "action_b": result.get('action_b', ''),
-                        "conflict_level": result.get('conflict_level', 'unknown'),
+                        "action_a": action_a_val,
+                        "action_b": action_b_val,
+                        "conflict_level": conflict_val,
                         "trust_delta": round(result.get('trust_delta', 0), 4),
                         "round": round_num,
                     }
@@ -729,13 +747,13 @@ class MultiAgentPoliticalSimulation:
                 self.neo4j.create_edge(
                     edge_type="PARTICIPATED_IN",
                     source_id=agent_a_id,
-                    target_id=博弈_result_node_id,
+                    target_id=game_result_node_id,
                     properties={"round": round_num}
                 )
                 self.neo4j.create_edge(
                     edge_type="PARTICIPATED_IN",
                     source_id=agent_b_id,
-                    target_id=博弈_result_node_id,
+                    target_id=game_result_node_id,
                     properties={"round": round_num}
                 )
             
