@@ -8,10 +8,10 @@
 import sys
 import os
 
-# 设置环境变量 - 阿里云 DashScope
-os.environ['DASHSCOPE_API_KEY'] = 'sk-00a5136c6276471fa72db5928c613e1a'
-os.environ['DASHSCOPE_MODEL'] = 'qwen-plus'
-os.environ.pop('LLM_API_KEY', None)
+# 设置环境变量 - Ollama gemma4:26b
+os.environ["LLM_API_KEY"] = "ollama-local"
+os.environ["LLM_BASE_URL"] = "http://localhost:11434/v1"
+os.environ["LLM_MODEL_NAME"] = "gemma4:26b"
 os.environ.pop('KIMI_API_KEY', None)
 
 # 添加路径
@@ -22,7 +22,7 @@ os.chdir('/tmp/mirofish/backend')
 from multi_agent_political_simulation import MultiAgentPoliticalSimulation
 
 # 使用DashScope + Neo4j
-sim = MultiAgentPoliticalSimulation("dashscope")
+sim = MultiAgentPoliticalSimulation("ollama")
 
 scenario = '波斯湾战争：伊朗封锁霍尔木兹海峡（2026年5月升级版）'
 context = '''【2026年5月1日 最新国际形势】
@@ -67,7 +67,7 @@ print('MiroFish 72智能体 × 博弈论模拟 + Neo4j持久化')
 print('（2026年5月最新版背景）')
 print('='*60)
 print(f'场景: {scenario}')
-print(f'LLM: DashScope qwen-plus（阿里云）')
+print(f'LLM: Ollama gemma4:26b（本地，关闭思维链）')
 print(f'图数据库: Neo4j (bolt://localhost:7687)')
 print('='*60)
 

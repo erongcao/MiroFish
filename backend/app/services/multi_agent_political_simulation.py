@@ -1035,7 +1035,7 @@ class MultiAgentPoliticalSimulation:
         async def bounded_task(task):
             async with semaphore:
                 try:
-                    return await asyncio.wait_for(task, timeout=30.0)
+                    return await asyncio.wait_for(task, timeout=300.0)
                 except asyncio.TimeoutError:
                     print(f"  [超时] Agent决策超时,已跳过")
                     return {"agent_id": None, "decision": {"action": DiplomaticAction.COOPERATE, "target": "none", "reasoning": "timeout"}}
