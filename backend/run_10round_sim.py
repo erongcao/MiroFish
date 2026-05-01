@@ -71,4 +71,4 @@ print(f'LLM: DashScope qwen-plus（阿里云）')
 print(f'图数据库: Neo4j (bolt://localhost:7687)')
 print('='*60)
 
-sim.run_full_simulation(scenario, context, rounds=5)
+sim.run_full_simulation(scenario, context, rounds=20)
