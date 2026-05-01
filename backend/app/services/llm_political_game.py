@@ -240,12 +240,13 @@ class LLMClient:
     
     def _chat_ollama(self, messages: List[Dict], temperature: float,
                      max_tokens: int) -> Optional[LLMResponse]:
-        """调用Ollama本地API"""
-        url = f"{self.base_url}/chat/completions"
+        """调用Ollama本地API（原生端点，支持gemma4思维链关闭）"""
+        # 使用原生API端点（支持think参数）
+        base = self.base_url.replace("/v1", "")
+        url = f"{base}/api/chat"
         
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}",
         }
         
         data = {
@@ -253,7 +254,12 @@ class LLMClient:
             "messages": messages,
             "temperature": temperature,
             "max_tokens": max_tokens,
+            "stream": False,
         }
+
+        # gemma4思考模型：关闭思维链以提升速度
+        if "gemma4" in self.model:
+            data["think"] = False
         
         req = urllib.request.Request(
             url,
@@ -264,12 +270,13 @@ class LLMClient:
         
         with urllib.request.urlopen(req, timeout=120) as response:
             result = json.loads(response.read().decode("utf-8"))
+            msg = result.get("message", {})
             
             return LLMResponse(
-                content=result["choices"][0]["message"]["content"],
+                content=msg.get("content", ""),
                 model=result.get("model", self.model),
-                tokens_used=result.get("usage", {}).get("total_tokens", 0),
-                finish_reason=result["choices"][0].get("finish_reason", ""),
+                tokens_used=result.get("eval_count", 0) + result.get("prompt_eval_count", 0),
+                finish_reason=result.get("done_reason", ""),
             )
 
 
